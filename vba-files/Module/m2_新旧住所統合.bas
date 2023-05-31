@@ -13,8 +13,12 @@ Option Explicit
 ' |  （１）単独レコードを新規シート（①new）へ移動する
 ' |  （２）重複レコードは、変更住所録を新規シート（①new）へ移動する
 ' |
-' |   ※public変数(当該プロジェクト内のモジュール間で共有)は、最初に呼ばれるプロシジャーに定義
-' |     接頭語に P_ をつける
+' --------------------------------------+----------------------------------------
+' |  命名規則の統一
+' |     Public変数  先頭を大文字    ≡ pascalCase
+' |     private変数 先頭を小文字    ≡ camelCase
+' |     定数        全て大文字、区切り文字は、アンダースコア(_) ≡ snake_case
+' |     引数        接頭語(p_)をつけ、camelCaseに準ずる
 ' --------------------------------------+-----------------------------------------
 '   +   +   +   +   +   +   +   +   +   +   +   +   +   +   x   +   +   +   +   +   +
 ' 共通有効シートサイズ（データ部のみの領域）
@@ -31,7 +35,7 @@ Const INPUTX_FROM                       As Long = 3         ' 入力項目開始列
 Const INPUTX_TO                         As Long = 23        ' 入力項目終了列
 Const CHECKED_X                         As Long = 40        ' チェック欄（自由）
 
-Private Wb                              As Workbook         ' このブック
+Private wb                              As Workbook         ' このブック
 ' ①oldSheet シートの定義
 Private wsOld                           As Worksheet
 Private oldX, oldXmin, oldXmax          As Long             ' i≡x 列　column
@@ -65,10 +69,10 @@ Public Sub 単独抽出処理_R(ByVal dummy As Variant)
     Call 前処理_R("住所録マージ" & Chr(13) & " 　プログラムを開始します。")
     Call バー表示("住所録マージのプログラムを開始します。")
 ' オブジェクト変数の定義（共通）
-    Set Wb = ThisWorkbook
+    Set wb = ThisWorkbook
     ' 表の大きさを得る
     ' 作業シート（このシート）の初期値
-    Set wsWrk = Wb.Worksheets("work")
+    Set wsWrk = wb.Worksheets("work")
     wrkYmin = YMIN
     wrkXmin = XMIN
     wrkYmax = wsWrk.Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row              ' 最終行（縦方向）3列目（"C")名前列で計測
@@ -101,7 +105,7 @@ Public Sub 単独抽出処理_R(ByVal dummy As Variant)
     End With
     
 ' ①new シートの初期値
-    Set wsNew = Wb.Worksheets("①new")
+    Set wsNew = wb.Worksheets("①new")
     newYmin = YMIN
     newXmin = XMIN
     wsNew.Activate
@@ -112,7 +116,7 @@ Public Sub 単独抽出処理_R(ByVal dummy As Variant)
     newCnt = 0
     newY = newYmin
 ' ②archives シートの初期値 ∵ 削除レコード
-    Set wsOld = Wb.Worksheets("②archives")
+    Set wsOld = wb.Worksheets("②archives")
     oldYmin = YMIN
     oldXmin = XMIN
     wsOld.Activate
@@ -123,7 +127,7 @@ Public Sub 単独抽出処理_R(ByVal dummy As Variant)
     oldCnt = 0
     oldY = oldYmin
 ' ③trnChk シートの初期値
-    Set wsTrn = Wb.Worksheets("③trnChk")
+    Set wsTrn = wb.Worksheets("③trnChk")
     trnYmin = YMIN
     trnXmin = XMIN
     trnY = trnYmin

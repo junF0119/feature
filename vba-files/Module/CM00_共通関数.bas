@@ -4,7 +4,7 @@ Option Explicit
 ' | @function   : •W€“I‚É—˜—p‚³‚ê‚éƒ‚ƒWƒ…[ƒ‹‚ğ•W€ŠÖ”‚Æ‚µ‚Ä“‡
 ' --------------------------------------+-----------------------------------------
 ' | @moduleName : CM00_‹¤’ÊŠÖ”"
-' | @Version    : v3.0.1
+' | @Version    : v3.0.2
 ' | @update     : 2023/05/31
 ' | @written    : 2023/04/21
 ' | @author     : Jun Fujinawa
@@ -91,7 +91,7 @@ Option Explicit
 '   ¦public•Ï”(“–ŠYƒvƒƒWƒFƒNƒg“à‚Ìƒ‚ƒWƒ…[ƒ‹ŠÔ‚Å‹¤—L)‚ÍAÅ‰‚ÉŒÄ‚Î‚ê‚éƒvƒƒVƒWƒƒ[‚É’è‹`
 '
 Public BackupFile                       As String       ' Às‘Oƒtƒ@ƒCƒ‹‚Ì•Û‘¶—pƒtƒHƒ‹ƒ_‚Ìƒtƒ‹ƒpƒX
-Public FullPath                         As String       ' ÀsExcel‚Ìƒtƒ‹ƒpƒX+ƒtƒ@ƒCƒ‹–¼ ß Thisworkbook
+Public fullPath                         As String       ' ÀsExcel‚Ìƒtƒ‹ƒpƒX+ƒtƒ@ƒCƒ‹–¼ ß Thisworkbook
 Public PathName                         As String       ' ÀsExcel‚Ìƒtƒ‹ƒpƒX
 Public FileName                         As String       ' ÀsExcel‚Ìƒtƒ@ƒCƒ‹–¼
 ' ƒfƒBƒŒƒNƒgƒŠ\‘¢‚ÌƒpƒX‚Æ–¼‘O
@@ -106,9 +106,9 @@ Public PrgName                          As String       ' ÀsExcel‚ÌƒvƒƒOƒ‰ƒ€–
 Public Version                          As String       ' vx.x.x
 Public Update                           As String       ' yyyymmdd
 ' ƒvƒƒOƒ‰ƒ€Às‚Ì“úî•ñ
-Public NowY                             As Integer      ' ¡“ú‚Ì”Ni”šj
-Public NowM                             As Integer      ' ¡“ú‚ÌŒi”šj
-Public NowD                             As Integer      ' ¡“ú‚Ì“úi”šj
+Public nowY                             As Integer      ' ¡“ú‚Ì”Ni”šj
+Public nowM                             As Integer      ' ¡“ú‚ÌŒi”šj
+Public nowD                             As Integer      ' ¡“ú‚Ì“úi”šj
 Public TimeStart                        As Variant      ' ƒvƒƒOƒ‰ƒ€ŠJn‚Ì“ú•t‚Æ
 Public TimeStop                         As Variant      ' ƒvƒƒOƒ‰ƒ€I—¹‚Ì“ú•t‚Æ
 Public TimeLap                          As Variant      ' ƒvƒƒOƒ‰ƒ€Às‚ÌŠ—vŠÔ
@@ -159,13 +159,13 @@ Sub get‹¤’Ê•Ï”_R(ByVal dummy As Variant)
     TimeStart = Time                                  ' ˆ—ŠÔŒv‘ª
     TimeStop = TimeStart
     TimeLap = TimeStop - TimeStart
-    NowYMD = Now()               ' ¡“ú‚Ì“ú•t‚©‚ç”NAŒA“úAŒ––“ú‚ğ•ªŠ„
-    NowY = Year(nowYMD)
-    NowM = month(nowYMD)
-    NowD = Day(nowYMD)
+    nowYMD = Now()               ' ¡“ú‚Ì“ú•t‚©‚ç”NAŒA“úAŒ––“ú‚ğ•ªŠ„
+    nowY = Year(nowYMD)
+    nowM = month(nowYMD)
+    nowD = Day(nowYMD)
 
 ' ƒtƒ@ƒCƒ‹–¼‘®F .\.\SysID.xx.xx_programName-vX.Y.Z_yyyymmdd.sufix
-    FullPath = ActiveWorkbook.Path & "\" & ActiveWorkbook.Name
+    fullPath = ActiveWorkbook.Path & "\" & ActiveWorkbook.Name
     PathName = ActiveWorkbook.Path
     FileName = ActiveWorkbook.Name
     temp = Split(PathName, "\")
@@ -193,7 +193,7 @@ Sub get‹¤’Ê•Ï”_R(ByVal dummy As Variant)
 
 End Sub
 
-Sub ‘Oˆ—_R(ByVal dummy As variant)
+Sub ‘Oˆ—_R(ByVal dummy As Variant)
 ' --------------------------------------+-----------------------------------------
 ' | @function   : ƒWƒ‡ƒu‚Ì‰Šúˆ—i•W€”Åj
 ' --------------------------------------+-----------------------------------------
@@ -224,7 +224,7 @@ Sub ‘Oˆ—_R(ByVal dummy As variant)
 End Sub
 
 
-Sub Œãˆ—_R(ByVal dummy As variant)
+Sub Œãˆ—_R(ByVal dummy As Variant)
 ' --------------------------------------+-----------------------------------------
 ' | @function   :I—¹ˆ—‚Ì—v–ñi•W€”Åj
 ' --------------------------------------+-----------------------------------------
@@ -657,8 +657,8 @@ Public Function IsExitsFolderDir(p_sFolderPath) As Boolean
 ' | @function   : ƒtƒHƒ‹ƒ_‚Ì‘¶İ‚ğƒ`ƒFƒbƒNi•W€”Åj
 ' --------------------------------------+-----------------------------------------
 ' | @moduleName : util15_IsExitsFolderDir
-' | @Version    : v1.0.1
-' | @update     : 2023/05/18
+' | @Version    : v1.2.0
+' | @update     : 2023/05/31
 ' | @written    : 2020/12/09
 ' | @remarks
 ' |@ˆø”‚Å“n‚³‚ê‚½ƒtƒHƒ‹ƒ_‚Ì‘¶İ‚ğƒ`ƒFƒbƒN‚·‚é
@@ -672,9 +672,9 @@ Public Function IsExitsFolderDir(p_sFolderPath) As Boolean
 '
     result = Dir(p_sFolderPath, vbDirectory)
     If (result = "") Then
-        IsExitsFolderDir = True
+        IsExitsFolderDir = False    ' ƒtƒHƒ‹ƒ_‚ª‘¶İ‚µ‚È‚¢
     Else
-        IsExitsFolderDir = False
+        IsExitsFolderDir = True     ' ƒtƒHƒ‹ƒ_‚ª‘¶İ‚·‚é
     End If
     
 End Function
@@ -995,7 +995,7 @@ Public Function getImportSheet_F(ByVal p_importFile As String, ByVal p_importShe
 ' | @remarks
 ' |
 ' --------------------------------------+-----------------------------------------
-    Dim Wb                              As Workbook
+    Dim wb                              As Workbook
     Dim ws                              As Worksheet
     Dim wbImp                           As Workbook
     Dim sw_FalseTrue                    As Boolean
@@ -1007,9 +1007,9 @@ Public Function getImportSheet_F(ByVal p_importFile As String, ByVal p_importShe
 ' 1.import‚·‚éƒV[ƒg‚ğŠi”[‚·‚éƒV[ƒgmworkn‚ÍA–‘O‚Éíœ
 ' --------------------------------------+-----------------------------------------
 '
-    Set Wb = ActiveWorkbook
+    Set wb = ActiveWorkbook
     If IsExistSheet(p_saveSheet) Then
-        Wb.Worksheets(p_saveSheet).Delete            ' ˆÈ‘O‚ÌƒV[ƒg‚ğíœ
+        wb.Worksheets(p_saveSheet).Delete            ' ˆÈ‘O‚ÌƒV[ƒg‚ğíœ
     End If
 ' ƒtƒ@ƒCƒ‹w’è‚Ì—L–³ƒ`ƒFƒbƒN@/@w’è‚µ‚½ƒtƒ@ƒCƒ‹‚ª‚È‚©‚Á‚½‚çAƒGƒNƒXƒvƒ[ƒ‰‚Åw’è‚³‚¹‚é
     sw_FalseTrue = False
@@ -1036,7 +1036,7 @@ Public Function getImportSheet_F(ByVal p_importFile As String, ByVal p_importShe
 ' ŠO•”Excelƒtƒ@ƒCƒ‹‚ğŠJ‚«AimportƒV[ƒg‚ğì‹ÆƒV[ƒg work ‚ÖƒRƒs[
     Workbooks.Open p_importFile
     Set wbImp = ActiveWorkbook
-    wbImp.Worksheets(p_importSheet).Copy after:=Wb.Worksheets(1)
+    wbImp.Worksheets(p_importSheet).Copy after:=wb.Worksheets(1)
     
     Set ws = ActiveSheet
     ws.Name = p_saveSheet
@@ -1045,7 +1045,7 @@ Public Function getImportSheet_F(ByVal p_importFile As String, ByVal p_importShe
 
 ' ƒIƒuƒWƒFƒNƒg•Ï”‚Ì‰ğ•ú
     Set wbImp = Nothing
-    Set Wb = Nothing
+    Set wb = Nothing
     Set ws = Nothing
 ' –ß‚è’l
     getImportSheet_F = p_importFile
@@ -1079,7 +1079,7 @@ Public Sub putStatusBar(ByVal p_statusBarMsg As String)
     Calculate                         ' @ÅVó‘Ô‚ÉXV
 End Sub
 
-Public Sub debug2text(ByVal p_text As String, Optional p_mode As String = "print")
+Public Sub debug2text(ByVal p_text As String, Optional P_mode As String = "print")
 ' --------------------------------------------------------------------------------
 ' | @function   : Debug.Print‚ğƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚Éo—Í
 ' --------------------------------------+-----------------------------------------
@@ -1104,7 +1104,7 @@ Public Sub debug2text(ByVal p_text As String, Optional p_mode As String = "print
 '
 ' ---Procedure Division ----------------+-----------------------------------------
 '
-    Select Case p_mode
+    Select Case P_mode
         Case "open"
 ' ˆ—“ú‚ğæ“¾
             dt = Format(Now, "yyyymmdd_hhmmss") ' Œ»İ‚Ì“ú‚ğyyyymmdd_hhmmssŒ`®‚Åæ“¾

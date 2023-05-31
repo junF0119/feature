@@ -39,8 +39,12 @@ Option Explicit
 ' |         3.　データ項目の正規化……キー項目を除く入力データの正規化
 ' |
 ' |
-' |   ※public変数(当該プロジェクト内のモジュール間で共有)は、最初に呼ばれるプロシジャーに定義
-' |     接頭語に P_ をつける
+' --------------------------------------+----------------------------------------
+' |  命名規則の統一
+' |     Public変数  先頭を大文字    ≡ pascalCase
+' |     private変数 先頭を小文字    ≡ camelCase
+' |     定数        全て大文字、区切り文字は、アンダースコア(_) ≡ snake_case
+' |     引数        接頭語(p_)をつけ、camelCaseに準ずる
 ' --------------------------------------+-----------------------------------------
 '   +   +   +   +   +   +   +   +   +   +   +   +   +   +   x   +   +   +   +   +   +
 
@@ -183,8 +187,8 @@ Private Sub arrSet_R(ByRef p_cnt As Long, ByVal p_yMin As Long, ByVal p_yMax As 
     p_cnt = 0
     For j = p_yMin To p_yMax    '(行)
         jMax = jMax + 1
-        pkey.primaryKey = Wb.Worksheets(p_sheetName).Cells(j, PRIMARYKEY_X)     ' BA列（53）
-        pkey.nameKey = Wb.Worksheets(p_sheetName).Cells(j, PKEY_X)              ' AP列（42）
+        pkey.primaryKey = wb.Worksheets(p_sheetName).Cells(j, PRIMARYKEY_X)     ' BA列（53）
+        pkey.nameKey = wb.Worksheets(p_sheetName).Cells(j, PKEY_X)              ' AP列（42）
         pkey.sheetName = p_sheetName
         pkey.rowAddress = j
         ary(jMax) = pkey

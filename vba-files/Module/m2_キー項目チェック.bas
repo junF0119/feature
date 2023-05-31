@@ -183,8 +183,8 @@ Private Sub arrSet_R(ByRef p_cnt As Long, ByVal p_yMin As Long, ByVal p_yMax As 
     p_cnt = 0
     For j = p_yMin To p_yMax    '(行)
         jMax = jMax + 1
-        pkey.primaryKey = Wb.Worksheets(p_sheetName).Cells(j, PRIMARYKEY_X)     ' BA列（53）
-        pkey.nameKey = Wb.Worksheets(p_sheetName).Cells(j, PKEY_X)              ' AP列（42）
+        pkey.primaryKey = wb.Worksheets(p_sheetName).Cells(j, PRIMARYKEY_X)     ' BA列（53）
+        pkey.nameKey = wb.Worksheets(p_sheetName).Cells(j, PKEY_X)              ' AP列（42）
         pkey.sheetName = p_sheetName
         pkey.rowAddress = j
         ary(jMax) = pkey

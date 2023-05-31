@@ -53,7 +53,7 @@ Option Explicit
 '   +   +   +   +   +   +   +   +   +   +   +   +   +   +   x   +   +   +   +   +   +
 
 ' オブジェクト変数の定義
-Private Wb                              As Workbook         ' このブック
+Private wb                              As Workbook         ' このブック
 ' ①原簿シートの定義
 Private wsOld                           As Worksheet
 Private oldX, oldXmin, oldXmax          As Long             ' i≡x 列　column
@@ -97,11 +97,11 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
 ' 1.2 初期設定処理
     
 ' オブジェクト変数の定義（共通）
-    Set Wb = ThisWorkbook
-    Set wsOld = Wb.Worksheets(Range("C_oldSheet").Value)        ' ①原簿シート
-    Set wsTrn = Wb.Worksheets(Range("C_trnSheet").Value)        ' ③変更住所録シート
-    Set WsNew = Wb.Worksheets(Range("C_newSheet").Value)        ' 新住所録シート
-    Set WsWrk = Wb.Worksheets("work")                           ' 作業用シートのため固定
+    Set wb = ThisWorkbook
+    Set wsOld = wb.Worksheets(Range("C_oldSheet").Value)        ' ①原簿シート
+    Set wsTrn = wb.Worksheets(Range("C_trnSheet").Value)        ' ③変更住所録シート
+    Set wsNew = wb.Worksheets(Range("C_newSheet").Value)        ' 新住所録シート
+    Set wsWrk = wb.Worksheets("work")                           ' 作業用シートのため固定
     
  ' 既存シートのクリア
     Call importClear_R(Range("C_oldSheet"))                     ' ①原簿シートのクリア
@@ -119,49 +119,53 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
 
   ' M-①新住所録原簿を取り込み、戻り値を得る
     Call importSheet_R(Range("C_oldMst").Value, Range("C_oldSheet").Value, "M-①新住所録原簿を選択してください。", _
-                       inExcelpath, SrcYmax, SrcXmax)
+                       inExcelpath, oldYmax, oldXmax)
     Range("C_oldMst").Value = inExcelpath
     oldYmin = YMIN
     oldXmin = XMIN
 
 ' T-②変更住所録を取り込み、戻り値を得る
     Call importSheet_R(Range("C_trnMst").Value, Range("C_trnSheet").Value, "T-③変更住所録を選択してください。", _
-                       inExcelpath, TrnYmax, TrnXmax)
+                       inExcelpath, trnYmax, trnXmax)
     Range("C_trnMst").Value = inExcelpath
     trnYmin = YMIN
     trnXmin = XMIN
 
 ' 1.4 取り込んだシートに(54)識別区分:BA列を付加し workシート　に統合し、(42)key姓名/(54)識別区分で昇順ソートする
-'   (54)識別区分:BA列　①原簿シート＝1、③変更住所録＝3　
+'   (54)識別区分:BA列　①原簿シート＝1、③変更住所録＝3
     j = 0
     jMin = oldYmin
     jMax = oldYmax
-    wrkY = wrkYmin
-    for j = jMin to jMax
-        wsOld.range(cells(oldXmin,j),cells(oldMax,j)) copy 
-        wsWrk.range(cells(wrkXmin,wrkY),cells(wrkMax,wrkY)).PasteSpecial _
-                            Paste:=xlPasteValues _          ' 値の貼り付け
-                          , Operation:=xlNone _             ' 演算して貼り付けは、しない
-                          , SkipBlanks:=False _             ' 空白セルは、無視しない
-                          , Transpose:=False                ' 行列を入れ替えない
+    wrkY = YMIN
+    wrkYmin = YMIN
+    wrkXmin = XMIN
+    For j = jMin To jMax
+        wsOld.Range(Cells(j, oldXmin).Address, Cells(j, oldXmax).Address).Copy
+        wsWrk.Range(Cells(wrkY, wrkXmin).Address).PasteSpecial _
+                                                  Paste:=xlPasteValues _
+                                                , Operation:=xlNone _
+                                                , SkipBlanks:=False _
+                                                , Transpose:=False
+                                                
         Application.CutCopyMode = False                     ' コピー状態の解除
+        wsWrk.Cells(wrkY, 54) = 1                           '  (54)識別区分:BA列
         wrkY = wrkY + 1
-        wsWrk.cells(54,wrkY) = 1                            '  (54)識別区分:BA列
-    next j
+    Next j
 
     jMin = trnYmin
     jMax = trnYmax
-    for j = jMin to jMax
-        wsTrn.range(cells(trnXmin,j),cells(trnMax,j)) copy 
-        wsWrk.range(cells(wrkXmin,wrkY),cells(wrkMax,wrkY)).PasteSpecial _
-                            Paste:=xlPasteValues _          ' 値の貼り付け
-                          , Operation:=xlNone _             ' 演算して貼り付けは、しない
-                          , SkipBlanks:=False _             ' 空白セルは、無視しない
-                          , Transpose:=False                ' 行列を入れ替えない
+    For j = jMin To jMax
+        wsTrn.Range(Cells(j, trnXmin).Address, Cells(j, trnXmax).Address).Copy
+        wsWrk.Range(Cells(wrkY, wrkXmin).Address).PasteSpecial _
+                                                  Paste:=xlPasteValues _
+                                                , Operation:=xlNone _
+                                                , SkipBlanks:=False _
+                                                , Transpose:=False
+                                                            
         Application.CutCopyMode = False                     ' コピー状態の解除
+        wsWrk.Cells(wrkY, 54) = 3                           '  (54)識別区分:BA列
         wrkY = wrkY + 1
-        wsWrk.cells(54,wrkY) = 3                            '  (54)識別区分:BA列
-    next j
+    Next j
 ' オブジェクト変数の定義（共通）
     Set wb = ThisWorkbook
     ' 表の大きさを得る
@@ -177,16 +181,16 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
         .Sort.SortFields.Clear      '並び替え条件をクリア
         '項目1
         .Sort.SortFields.Add _
-             Key:=.Range(PKEY_RNG) _    ' (39)姓名key(昇順)
-            ,SortOn:=xlSortOnValues _
-            ,Order:=xlAscending _
-            ,DataOption:=xlSortNormal
+             Key:=.Range(PKEY_RNG) _
+            , SortOn:=xlSortOnValues _
+            , Order:=xlAscending _
+            , DataOption:=xlSortNormal
         '項目2
         .Sort.SortFields.Add _
-             Key:=.Cells(54, 3) _       ' (54)識別区分:BA列(降順）
-            ,SortOn:=xlSortOnValues, _
-            ,Order:=xlDescending, _
-            ,DataOption:=xlSortNormal
+             Key:=.Range("BA3") _
+            , SortOn:=xlSortOnValues _
+            , Order:=xlDescending _
+            , DataOption:=xlSortNormal
 '並び替えを実行する
         With .Sort
             .SetRange Range(Cells(YMIN - 1, XMIN), Cells(wrkYmax, XMAX))
@@ -218,7 +222,7 @@ Private Sub importClear_R(ByVal p_sheetName As String)
 End Sub
 
 Private Sub importSheet_R(ByVal p_excelFile As String, ByVal p_objSheet As String, p_openFileMsg As String, _
-                          ByRef p_srcFile As String, ByRef p_yMax As Long, ByRef p_Xmax As Long)
+                          ByRef p_srcFile As String, ByRef p_yMax As Long, ByRef p_xMax As Long)
 ' --------------------------------------+-----------------------------------------
 ' | @function   : コピー元のシートをこのブックの同じ名前のシート へコピー
 ' | @moduleName : m1_初期化処理
@@ -228,8 +232,8 @@ Private Sub importSheet_R(ByVal p_excelFile As String, ByVal p_objSheet As Strin
 ' | 引　数：p_objSheet    コピーするシート名＝コピー先のシート名
 ' | 引　数：p_openFileMsg ファイル選択のエクスプローラに表示するメッセージ
 ' | 戻り値：p_srccFile    コピー元のExcelFileの絶対パスとファイル名
-' | 戻り値：p_Ymax        コピーしたシートの最終行の位置
-' | 戻り値：p_Xmax        コピーしたシートの最終列の位置
+' | 戻り値：p_yMax        コピーしたシートの最終行の位置
+' | 戻り値：p_xMax        コピーしたシートの最終列の位置
 ' |
 ' --------------------------------------+-----------------------------------------
     Dim wbTmp                           As Workbook     ' コピーもとのExcelファイルシート
@@ -253,7 +257,7 @@ Private Sub importSheet_R(ByVal p_excelFile As String, ByVal p_objSheet As Strin
     sw_naFile = False
 ' パス指定があるときは、フォルダの存在をチェック
     If childPath <> "" Then
-        If IsExitsFolderDir(childPath) Then
+        If IsExitsFolderDir(SubSysPath & "\" & childPath) Then
             sw_naFolder = True
         Else
             childPath = ""
@@ -287,17 +291,28 @@ Private Sub importSheet_R(ByVal p_excelFile As String, ByVal p_objSheet As Strin
     Set wbTmp = ActiveWorkbook
 '    ActiveSheet.ShowAllData         ' フィルタ解除
     wbTmp.Sheets(p_objSheet).Range(Cells(YMIN, XMIN), Cells(yMax, XMAX)).Copy
-    Wb.Worksheets(p_objSheet).Range(Cells(YMIN, XMIN), Cells(yMax, XMAX)).PasteSpecial _
-                            Paste:=xlPasteValues _          ' 値の貼り付け
-                          , Operation:=xlNone _             ' 演算して貼り付けは、しない
-                          , SkipBlanks:=False _             ' 空白セルは、無視しない
-                          , Transpose:=False                ' 行列を入れ替えない
+    wb.Sheets(p_objSheet).Range(Cells(YMIN, XMIN).Address).PasteSpecial _
+    
+'    wb.Sheets(p_objSheet).Range("A4").PasteSpecial _
+                            Paste:=xlPasteValues _
+                          , Operation:=xlNone _
+                          , SkipBlanks:=False _
+                          , Transpose:=False
+    
+    
+    
+    
+    
+'    wb.Sheets(p_objSheet).Range("A4").PasteSpecial Paste:=xlPasteValues
+'    wb.Sheets(p_objSheet).Range(Cells(YMIN, XMIN), Cells(yMax, XMAX)).PasteSpecial Paste:=xlPasteValues
+    
+    
     Application.CutCopyMode = False                         ' コピー状態の解除
     wbTmp.Close saveChanges:=False                          ' 保存しないでclose
 ' 表の大きさを得る
     p_srcFile = srcFile
-    p_yMax = Wb.Worksheets(p_objSheet).Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row            ' 最終行（縦方向）1列目（"A")で計測
-    p_Xmax = Wb.Worksheets(p_objSheet).Cells(YMIN - 1, Columns.Count).End(xlToLeft).Column   ' 最終列（横方向）   ' ヘッダー行 3行目で計測
+    p_yMax = wb.Worksheets(p_objSheet).Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row            ' 最終行（縦方向）(6)名前（"F")で計測
+    p_xMax = wb.Worksheets(p_objSheet).Cells(YMIN - 1, Columns.Count).End(xlToLeft).Column   ' 最終列（横方向）   ' ヘッダー行 3行目で計測
 ' オブジェクト変数の解放
     Set wbTmp = Nothing
 
