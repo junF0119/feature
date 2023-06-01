@@ -95,6 +95,7 @@ Public Sub キー項目チェック_R(ByVal dummy As Variant)
 '
 ' ---Procedure Division ----------------+-----------------------------------------
 '
+Stop
     sw_result = True            ' エラーなし
     ErrCnt = 0
     primaryKeyMax = 0

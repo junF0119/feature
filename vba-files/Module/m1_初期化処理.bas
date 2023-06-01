@@ -166,34 +166,36 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
         wsWrk.Cells(wrkY, 54) = 3                           '  (54)識別区分:BA列
         wrkY = wrkY + 1
     Next j
+
 ' オブジェクト変数の定義（共通）
-    Set wb = ThisWorkbook
-    ' 表の大きさを得る
-    ' 作業シート（このシート）の初期値
+    Sheets("work").Activate
+' 表の大きさを得る
+' 作業シート（このシート）の初期値
     Set wsWrk = wb.Worksheets("work")
     wrkYmin = YMIN
     wrkXmin = XMIN
-    wrkYmax = wsWrk.Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row              ' 最終行（縦方向）3列目（"C")名前列で計測
+    wrkYmax = wsWrk.Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row              ' 最終行（縦方向）6列目（"F")名前列で計測
     wrkXmax = wsWrk.Cells(YMIN - 1, Columns.Count).End(xlToLeft).Column     ' 最終列（横方向）   ' ヘッダー行 3行目で計測
     wrkCnt = wrkYmax - wrkYmin + 1
+
 ' 昇順ソート　key: (39)姓名key(昇順)、(54)識別区分:BA列(降順）
     With ActiveSheet                '対象シートをアクティブにする
         .Sort.SortFields.Clear      '並び替え条件をクリア
         '項目1
-        .Sort.SortFields.Add _
+        .Sort.SortFields.Add2 _
              Key:=.Range(PKEY_RNG) _
             , SortOn:=xlSortOnValues _
             , Order:=xlAscending _
             , DataOption:=xlSortNormal
         '項目2
-        .Sort.SortFields.Add _
-             Key:=.Range("BA3") _
+        .Sort.SortFields.Add2 _
+             Key:=.Range(MASTER_RNG) _
             , SortOn:=xlSortOnValues _
             , Order:=xlDescending _
             , DataOption:=xlSortNormal
 '並び替えを実行する
         With .Sort
-            .SetRange Range(Cells(YMIN - 1, XMIN), Cells(wrkYmax, XMAX))
+            .SetRange Range(Cells(wrkYmin - 1, wrkXmin), Cells(wrkYmax, wrkXmax))
             .Header = xlYes
             .MatchCase = False
             .Orientation = xlTopToBottom
@@ -290,22 +292,14 @@ Private Sub importSheet_R(ByVal p_excelFile As String, ByVal p_objSheet As Strin
     Workbooks.Open srcFile
     Set wbTmp = ActiveWorkbook
 '    ActiveSheet.ShowAllData         ' フィルタ解除
-    wbTmp.Sheets(p_objSheet).Range(Cells(YMIN, XMIN), Cells(yMax, XMAX)).Copy
+    wbTmp.Sheets(p_objSheet).Range(Cells(YMIN, XMIN).Address, Cells(yMax, XMAX).Address).Copy
     wb.Sheets(p_objSheet).Range(Cells(YMIN, XMIN).Address).PasteSpecial _
+                                                           Paste:=xlPasteValues _
+                                                         , Operation:=xlNone _
+                                                         , SkipBlanks:=False _
+                                                         , Transpose:=False
     
-'    wb.Sheets(p_objSheet).Range("A4").PasteSpecial _
-                            Paste:=xlPasteValues _
-                          , Operation:=xlNone _
-                          , SkipBlanks:=False _
-                          , Transpose:=False
-    
-    
-    
-    
-    
-'    wb.Sheets(p_objSheet).Range("A4").PasteSpecial Paste:=xlPasteValues
-'    wb.Sheets(p_objSheet).Range(Cells(YMIN, XMIN), Cells(yMax, XMAX)).PasteSpecial Paste:=xlPasteValues
-    
+   
     
     Application.CutCopyMode = False                         ' コピー状態の解除
     wbTmp.Close saveChanges:=False                          ' 保存しないでclose
