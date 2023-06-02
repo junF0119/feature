@@ -111,11 +111,11 @@ Public Sub 入力項目正規化_R(ByVal dummy As Variant)
 '    dataCnt = SrcYmax + ArvYmax - (YMIN - 1) * 2
 '    MsgBox dataCnt & " " & LBound(ary) & "-" & UBound(ary)
 
-    ReDim ary(SrcYmax + ArvYmax - (YMIN - 1) * 2 - 1)   ' index= 0 - のため　-1　する
+    ReDim ary(SrcYmax + arvYmax - (YMIN - 1) * 2 - 1)   ' index= 0 - のため　-1　する
 ' ①原簿 + ②archives を配列 ary() へコピー
     jMax = -1
     Call arrSet_R(SrcCnt, SrcYmin, SrcYmax, Range("C_SrcSheet").Value)     ' ①原簿シートを配列 ary() へコピー
-    Call arrSet_R(ArvCnt, ArvYmin, ArvYmax, Range("C_arvSheet").Value)      ' 続けて、②archives をコピー
+    Call arrSet_R(arvCnt, arvYmin, arvYmax, Range("C_arvSheet").Value)      ' 続けて、②archives をコピー
 
 ' --------------------------------------+-----------------------------------------
 ' 2.キー項目が null のレコードがないか探す　(42)key姓名 / (53)PrimaryKey
@@ -187,8 +187,8 @@ Private Sub arrSet_R(ByRef p_cnt As Long, ByVal p_yMin As Long, ByVal p_yMax As 
     p_cnt = 0
     For j = p_yMin To p_yMax    '(行)
         jMax = jMax + 1
-        pkey.primaryKey = wb.Worksheets(p_sheetName).Cells(j, PRIMARYKEY_X)     ' BA列（53）
-        pkey.nameKey = wb.Worksheets(p_sheetName).Cells(j, PKEY_X)              ' AP列（42）
+        pkey.primaryKey = Wb.Worksheets(p_sheetName).Cells(j, PRIMARYKEY_X)     ' BA列（53）
+        pkey.nameKey = Wb.Worksheets(p_sheetName).Cells(j, PKEY_X)              ' AP列（42）
         pkey.sheetName = p_sheetName
         pkey.rowAddress = j
         ary(jMax) = pkey

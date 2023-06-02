@@ -65,8 +65,8 @@ Private upY, upYmin, upYmax             As Long             ' j≡y 行　row
 Private cntUp                           As Long             ' マスタの変更があったレコード件数
 ' archives シートの定義 ∵ trn > old 削除レコード
 Private wsArv                           As Worksheet
-Private ArvX, ArvXmin, ArvXmax          As Long             ' i≡x 列　column
-Private ArvY, ArvYmin, ArvYmax          As Long             ' j≡y 行　row
+Private arvX, arvXmin, arvXmax          As Long             ' i≡x 列　column
+Private arvY, arvYmin, arvYmax          As Long             ' j≡y 行　row
 Private cntArv                          As Long             ' 削除レコードの件数
 
 Public Sub マージ処理_R(ByVal dummy As Variant)
@@ -326,10 +326,10 @@ Private Sub maching_R(ByVal dummy As Variant)
     
 ' 削除レコード～削除日が記載されたレコード
     Set wsArv = wbWork.Worksheets(Range("C_archive").Value)
-    ArvYmin = YMIN
-    ArvXmin = XMIN
-    ArvYmax = ArvYmin                                       ' 最終行（縦方向）
-    ArvXmax = XMAX                                          ' 最終列（横方向）
+    arvYmin = YMIN
+    arvXmin = XMIN
+    arvYmax = arvYmin                                       ' 最終行（縦方向）
+    arvXmax = XMAX                                          ' 最終列（横方向）
     cntArv = 0
 
     cntTrn = 0
@@ -340,7 +340,7 @@ Private Sub maching_R(ByVal dummy As Variant)
     oldY = oldYmin
     newY = newYmin
     upY = upYmin
-    ArvY = ArvYmin
+    arvY = arvYmin
     
     Do Until trnEof = True And oldEOF = True
     
@@ -400,11 +400,11 @@ Debug.Print "trn:" & trnY & Chr(9) & _
     newYmax = wsNew.Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row            ' 最終行（縦方向）3列目（"C")で計測
     newXmax = wsNew.Cells(YMIN - 1, Columns.Count).End(xlToLeft).Column   ' 最終列（横方向）   ' ヘッダー行 3行目で計測
     
-    ArvY = YMIN - 1
+    arvY = YMIN - 1
     For i = newYmin To newYmax
         If wsNew.Cells(i, PDEL_X) <> "" Then
-            ArvY = ArvY + 1
-            wsNew.Rows(i).Copy Destination:=wsArv.Rows(ArvY)
+            arvY = arvY + 1
+            wsNew.Rows(i).Copy Destination:=wsArv.Rows(arvY)
             wsNew.Rows(i).Select
             Selection.ClearContents
         End If

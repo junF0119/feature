@@ -60,16 +60,16 @@ Public Const CHECKED_X                  As Long = 1         ' チェック欄（自由）
 Public Const PRIMARYKEY_X               As Long = 53        ' PrimaryKeyの列"BA"
 Public Const MASTER_RNG                 As String = "BB3"     ' workシート専用「識別区分」のセル番号"BB3"
 ' ①原簿シートの定義
-Public wb                               As Workbook         ' このブック
+Public Wb                               As Workbook         ' このブック
 Public wsSrc                            As Worksheet
 Public SrcX, SrcXmin, SrcXmax           As Long             ' i≡x 列　column
 Public SrcY, SrcYmin, SrcYmax           As Long             ' j≡y 行　row
 Public SrcCnt                           As Long             ' レコード全件の件数
 ' ②archives シートの定義 ∵ 削除レコード
 Public wsArv                            As Worksheet
-Public ArvX, ArvXmin, ArvXmax           As Long             ' i≡x 列　column
-Public ArvY, ArvYmin, ArvYmax           As Long             ' j≡y 行　row
-Public ArvCnt                           As Long             ' 削除レコードの件数
+Public arvX, arvXmin, arvXmax           As Long             ' i≡x 列　column
+Public arvY, arvYmin, arvYmax           As Long             ' j≡y 行　row
+Public arvCnt                           As Long             ' 削除レコードの件数
 ' ③目視 シートの定義
 Public WsEye                            As Worksheet
 Public EyeX, EyeXmin, EyeXmax           As Long             ' i≡x 列　column
@@ -120,7 +120,7 @@ Public Sub 新住所録原簿更新処理_R(ByVal dummy As Variant)
 '
     Call 初期化処理_R("")
     
-    Call キー項目チェック_R("")
+'    Call キー項目チェック_R("")
     
     Call 入力項目正規化_R("")
     

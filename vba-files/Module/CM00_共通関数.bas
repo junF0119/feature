@@ -995,7 +995,7 @@ Public Function getImportSheet_F(ByVal p_importFile As String, ByVal p_importShe
 ' | @remarks
 ' |
 ' --------------------------------------+-----------------------------------------
-    Dim wb                              As Workbook
+    Dim Wb                              As Workbook
     Dim ws                              As Worksheet
     Dim wbImp                           As Workbook
     Dim sw_FalseTrue                    As Boolean
@@ -1007,9 +1007,9 @@ Public Function getImportSheet_F(ByVal p_importFile As String, ByVal p_importShe
 ' 1.importするシートを格納するシート［work］は、事前に削除
 ' --------------------------------------+-----------------------------------------
 '
-    Set wb = ActiveWorkbook
+    Set Wb = ActiveWorkbook
     If IsExistSheet(p_saveSheet) Then
-        wb.Worksheets(p_saveSheet).Delete            ' 以前のシートを削除
+        Wb.Worksheets(p_saveSheet).Delete            ' 以前のシートを削除
     End If
 ' ファイル指定の有無チェック　/　指定したファイルがなかったら、エクスプローラで指定させる
     sw_FalseTrue = False
@@ -1036,7 +1036,7 @@ Public Function getImportSheet_F(ByVal p_importFile As String, ByVal p_importShe
 ' 外部Excelファイルを開き、importシートを作業シート work へコピー
     Workbooks.Open p_importFile
     Set wbImp = ActiveWorkbook
-    wbImp.Worksheets(p_importSheet).Copy after:=wb.Worksheets(1)
+    wbImp.Worksheets(p_importSheet).Copy after:=Wb.Worksheets(1)
     
     Set ws = ActiveSheet
     ws.Name = p_saveSheet
@@ -1045,7 +1045,7 @@ Public Function getImportSheet_F(ByVal p_importFile As String, ByVal p_importShe
 
 ' オブジェクト変数の解放
     Set wbImp = Nothing
-    Set wb = Nothing
+    Set Wb = Nothing
     Set ws = Nothing
 ' 戻り値
     getImportSheet_F = p_importFile

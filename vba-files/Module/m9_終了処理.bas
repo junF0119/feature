@@ -55,7 +55,7 @@ Public Sub 終了処理_R(ByVal dummy As Variant)
 
 
     CloseingMsg = "|①原簿シート" & Chr(9) & "＝ " & SrcCnt & Chr(13) _
-                & "|②archives" & Chr(9) & "＝ " & ArvCnt & Chr(13) _
+                & "|②archives" & Chr(9) & "＝ " & arvCnt & Chr(13) _
                 & "|③目視" & Chr(9) & "＝ " & EyeCnt & Chr(13) _
                 & "| エラー" & Chr(9) & "＝ " & ErrCnt & Chr(13)
                     

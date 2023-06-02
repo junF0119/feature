@@ -5,7 +5,7 @@ Option Explicit
 ' --------------------------------------+-----------------------------------------
 ' | @moduleName : m1_初期化処理
 ' | @Version    : v1.0.0
-' | @update     : 2023/05/30
+' | @update     : 2023/06/02
 ' | @written    : 2023/05/30
 ' | @author     : Jun Fujinawa
 ' | @license    : zStudio
@@ -53,12 +53,17 @@ Option Explicit
 '   +   +   +   +   +   +   +   +   +   +   +   +   +   +   x   +   +   +   +   +   +
 
 ' オブジェクト変数の定義
-Private wb                              As Workbook         ' このブック
+Private Wb                              As Workbook         ' このブック
 ' ①原簿シートの定義
 Private wsOld                           As Worksheet
 Private oldX, oldXmin, oldXmax          As Long             ' i≡x 列　column
 Private oldY, oldYmin, oldYmax          As Long             ' j≡y 行　row
 Private oldCnt                          As Long             ' 修正前レコードの件数
+' ②archivesシートの定義
+Private wsArv                           As Worksheet
+Private arvX, arvXmin, arvXmax          As Long             ' i≡x 列　column
+Private arvY, arvYmin, arvYmax          As Long             ' j≡y 行　row
+Private arvCnt                          As Long             ' 修正前レコードの件数
 ' ③変更住所録シートの定義
 Private wsTrn                           As Worksheet
 Private trnX, trnXmin, trnXmax          As Long             ' i≡x 列　column
@@ -97,34 +102,44 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
 ' 1.2 初期設定処理
     
 ' オブジェクト変数の定義（共通）
-    Set wb = ThisWorkbook
-    Set wsOld = wb.Worksheets(Range("C_oldSheet").Value)        ' ①原簿シート
-    Set wsTrn = wb.Worksheets(Range("C_trnSheet").Value)        ' ③変更住所録シート
-    Set wsNew = wb.Worksheets(Range("C_newSheet").Value)        ' 新住所録シート
-    Set wsWrk = wb.Worksheets("work")                           ' 作業用シートのため固定
+    Set Wb = ThisWorkbook
+    Set wsOld = Wb.Worksheets(Range("C_oldSheet").Value)        ' ①原簿シート
+    Set wsArv = Wb.Worksheets(Range("C_arvSheet").Value)        ' ②archivesシート
+    Set wsTrn = Wb.Worksheets(Range("C_trnSheet").Value)        ' ③変更住所録シート
+    Set wsNew = Wb.Worksheets(Range("C_newSheet").Value)        ' 新住所録シート
+    Set wsWrk = Wb.Worksheets("work")                           ' 作業用シートのため固定
     
  ' 既存シートのクリア
     Call importClear_R(Range("C_oldSheet"))                     ' ①原簿シートのクリア
+    Call importClear_R(Range("C_arvSheet"))                     ' ②archivesシートのクリア
     Call importClear_R(Range("C_trnSheet"))                     ' ③変更住所録シートのクリア
     Call importClear_R(Range("C_newSheet"))                     ' 新住所録シートのクリア
     Call importClear_R("work")                                  ' 作業用シートのクリア
 
 ' カウントをゼロ
     oldCnt = 0
+    arvCnt = 0
     trnCnt = 0
     newCnt = 0
     wrkCnt = 0
 
 ' 1.3 外部Excelから取り込む
 
-  ' M-①新住所録原簿を取り込み、戻り値を得る
+' M-①新住所録原簿を取り込み、戻り値を得る
     Call importSheet_R(Range("C_oldMst").Value, Range("C_oldSheet").Value, "M-①新住所録原簿を選択してください。", _
                        inExcelpath, oldYmax, oldXmax)
     Range("C_oldMst").Value = inExcelpath
     oldYmin = YMIN
     oldXmin = XMIN
 
-' T-②変更住所録を取り込み、戻り値を得る
+' M-②archivesを取り込み、戻り値を得る
+    Call importSheet_R(Range("C_arvMst").Value, Range("C_arvSheet").Value, "M-②Archivesを選択してください。", _
+                       inExcelpath, arvYmax, arvXmax)
+    Range("C_arvMst").Value = inExcelpath
+    arvYmin = YMIN
+    arvXmin = XMIN
+
+' T-③変更住所録を取り込み、戻り値を得る
     Call importSheet_R(Range("C_trnMst").Value, Range("C_trnSheet").Value, "T-③変更住所録を選択してください。", _
                        inExcelpath, trnYmax, trnXmax)
     Range("C_trnMst").Value = inExcelpath
@@ -132,13 +147,14 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
     trnXmin = XMIN
 
 ' 1.4 取り込んだシートに(54)識別区分:BA列を付加し workシート　に統合し、(42)key姓名/(54)識別区分で昇順ソートする
-'   (54)識別区分:BA列　①原簿シート＝1、③変更住所録＝3
+'   (54)識別区分:BA列　①原簿シート＝1、②archivesシート＝2、③変更住所録シート＝3
     j = 0
     jMin = oldYmin
     jMax = oldYmax
     wrkY = YMIN
     wrkYmin = YMIN
     wrkXmin = XMIN
+' ①原簿シート
     For j = jMin To jMax
         wsOld.Range(Cells(j, oldXmin).Address, Cells(j, oldXmax).Address).Copy
         wsWrk.Range(Cells(wrkY, wrkXmin).Address).PasteSpecial _
@@ -151,7 +167,23 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
         wsWrk.Cells(wrkY, 54) = 1                           '  (54)識別区分:BA列
         wrkY = wrkY + 1
     Next j
+' ②archivesシート
+    jMin = arvYmin
+    jMax = arvYmax
+    For j = jMin To jMax
+        wsArv.Range(Cells(j, arvXmin).Address, Cells(j, arvXmax).Address).Copy
+        wsWrk.Range(Cells(wrkY, wrkXmin).Address).PasteSpecial _
+                                                  Paste:=xlPasteValues _
+                                                , Operation:=xlNone _
+                                                , SkipBlanks:=False _
+                                                , Transpose:=False
+                                                            
+        Application.CutCopyMode = False                     ' コピー状態の解除
+        wsWrk.Cells(wrkY, 54) = 2                           '  (54)識別区分:BA列
+        wrkY = wrkY + 1
+    Next j
 
+' ③変更住所録シート
     jMin = trnYmin
     jMax = trnYmax
     For j = jMin To jMax
@@ -171,7 +203,7 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
     Sheets("work").Activate
 ' 表の大きさを得る
 ' 作業シート（このシート）の初期値
-    Set wsWrk = wb.Worksheets("work")
+    Set wsWrk = Wb.Worksheets("work")
     wrkYmin = YMIN
     wrkXmin = XMIN
     wrkYmax = wsWrk.Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row              ' 最終行（縦方向）6列目（"F")名前列で計測
@@ -203,6 +235,8 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
             .Apply
         End With
     End With
+    
+Stop
 
 End Sub
 
@@ -218,7 +252,7 @@ Private Sub importClear_R(ByVal p_sheetName As String)
 '
     Sheets(p_sheetName).Activate
 '  シートに関係なく、データ域を一律クリア（ヘッダー域は除く）
-    Range(Cells(YMIN, XMIN), Cells(yMax, XMAX)).Select
+    Range(Cells(YMIN, XMIN), Cells(yMax, XMAX + 1)).Select
     Selection.ClearContents
 
 End Sub
@@ -293,7 +327,7 @@ Private Sub importSheet_R(ByVal p_excelFile As String, ByVal p_objSheet As Strin
     Set wbTmp = ActiveWorkbook
 '    ActiveSheet.ShowAllData         ' フィルタ解除
     wbTmp.Sheets(p_objSheet).Range(Cells(YMIN, XMIN).Address, Cells(yMax, XMAX).Address).Copy
-    wb.Sheets(p_objSheet).Range(Cells(YMIN, XMIN).Address).PasteSpecial _
+    Wb.Sheets(p_objSheet).Range(Cells(YMIN, XMIN).Address).PasteSpecial _
                                                            Paste:=xlPasteValues _
                                                          , Operation:=xlNone _
                                                          , SkipBlanks:=False _
@@ -305,8 +339,8 @@ Private Sub importSheet_R(ByVal p_excelFile As String, ByVal p_objSheet As Strin
     wbTmp.Close saveChanges:=False                          ' 保存しないでclose
 ' 表の大きさを得る
     p_srcFile = srcFile
-    p_yMax = wb.Worksheets(p_objSheet).Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row            ' 最終行（縦方向）(6)名前（"F")で計測
-    p_xMax = wb.Worksheets(p_objSheet).Cells(YMIN - 1, Columns.Count).End(xlToLeft).Column   ' 最終列（横方向）   ' ヘッダー行 3行目で計測
+    p_yMax = Wb.Worksheets(p_objSheet).Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row            ' 最終行（縦方向）(6)名前（"F")で計測
+    p_xMax = Wb.Worksheets(p_objSheet).Cells(YMIN - 1, Columns.Count).End(xlToLeft).Column   ' 最終列（横方向）   ' ヘッダー行 3行目で計測
 ' オブジェクト変数の解放
     Set wbTmp = Nothing
 

@@ -35,7 +35,7 @@ Const INPUTX_FROM                       As Long = 3         ' 入力項目開始列
 Const INPUTX_TO                         As Long = 23        ' 入力項目終了列
 Const CHECKED_X                         As Long = 40        ' チェック欄（自由）
 
-Private wb                              As Workbook         ' このブック
+Private Wb                              As Workbook         ' このブック
 ' ①oldSheet シートの定義
 Private wsOld                           As Worksheet
 Private oldX, oldXmin, oldXmax          As Long             ' i≡x 列　column
@@ -69,10 +69,10 @@ Public Sub 単独抽出処理_R(ByVal dummy As Variant)
     Call 前処理_R("住所録マージ" & Chr(13) & " 　プログラムを開始します。")
     Call バー表示("住所録マージのプログラムを開始します。")
 ' オブジェクト変数の定義（共通）
-    Set wb = ThisWorkbook
+    Set Wb = ThisWorkbook
     ' 表の大きさを得る
     ' 作業シート（このシート）の初期値
-    Set wsWrk = wb.Worksheets("work")
+    Set wsWrk = Wb.Worksheets("work")
     wrkYmin = YMIN
     wrkXmin = XMIN
     wrkYmax = wsWrk.Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row              ' 最終行（縦方向）3列目（"C")名前列で計測
@@ -105,7 +105,7 @@ Public Sub 単独抽出処理_R(ByVal dummy As Variant)
     End With
     
 ' ①new シートの初期値
-    Set wsNew = wb.Worksheets("①new")
+    Set wsNew = Wb.Worksheets("①new")
     newYmin = YMIN
     newXmin = XMIN
     wsNew.Activate
@@ -116,7 +116,7 @@ Public Sub 単独抽出処理_R(ByVal dummy As Variant)
     newCnt = 0
     newY = newYmin
 ' ②archives シートの初期値 ∵ 削除レコード
-    Set wsOld = wb.Worksheets("②archives")
+    Set wsOld = Wb.Worksheets("②archives")
     oldYmin = YMIN
     oldXmin = XMIN
     wsOld.Activate
@@ -127,7 +127,7 @@ Public Sub 単独抽出処理_R(ByVal dummy As Variant)
     oldCnt = 0
     oldY = oldYmin
 ' ③trnChk シートの初期値
-    Set wsTrn = wb.Worksheets("③trnChk")
+    Set wsTrn = Wb.Worksheets("③trnChk")
     trnYmin = YMIN
     trnXmin = XMIN
     trnY = trnYmin
