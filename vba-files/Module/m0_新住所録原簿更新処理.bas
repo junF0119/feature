@@ -93,7 +93,7 @@ Private j, jMax                         As Long
 
 Private sw_errorChk                     As Boolean          ' true…エラー無し、false…エラー有り
 
-Public Sub 新住所録原簿更新処理_R(ByVal dummy As Variant)
+Public Sub m0_新住所録原簿更新処理_R(ByVal dummy As Variant)
 ' --------------------------------------+-----------------------------------------
 ' |
 ' | プログラム構造
@@ -118,13 +118,11 @@ Public Sub 新住所録原簿更新処理_R(ByVal dummy As Variant)
 '
 ' ---Procedure Division ----------------+-----------------------------------------
 '
-    Call 初期化処理_R("")
+    Call m1_初期化処理_R("")
     
-'    Call キー項目チェック_R("")
+    Call m2_住所変更処理_R("")
     
-    Call 入力項目正規化_R("")
-    
-    Call 終了処理_R("")
+    Call m9_終了処理_R("")
     
 
 End Sub

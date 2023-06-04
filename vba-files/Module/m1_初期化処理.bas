@@ -1,4 +1,3 @@
-Attribute VB_Name = "m1_初期化処理"
 Option Explicit
 ' --------------------------------------+-----------------------------------------
 ' | @function   : 初期化処理（モジュール分割版）
@@ -79,8 +78,8 @@ Private wsWrk                           As Worksheet
 Private wrkX, wrkXmin, wrkXmax          As Long             ' i≡x 列　column
 Private wrkY, wrkYmin, wrkYmax          As Long             ' j≡y 行　row
 Private wrkCnt                          As Long             ' 作業レコードの件数=修正前+変更
-
-Public Sub 初期化処理_R(ByVal dummy As Variant)
+ 
+Public Sub m1_初期化処理_R(ByVal dummy As Variant)
 ' --------------------------------------+-----------------------------------------
 ' |     レコードの状態ごとにそれぞれのシートに振り分ける
 ' --------------------------------------+-----------------------------------------
@@ -90,6 +89,16 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
     Dim j, jMin, jMax                   As Long         ' 同一レコードの範囲(行 row y)
     Dim inExcelpath                     As String
 
+' ' 構造体の宣言
+' Type cntTbl
+'     old                                 As long     ' ①原簿
+'     arv                                 As long     ' ②archive
+'     trn                                 As long     ' ③変更住所録
+'     wrk                                 As long     ' work
+'     new1                                As long     ' newの原簿レコード
+'     new2                                As long     ' newのarchivwレコード
+' End Type
+    Dim cnt                             As cntTbl
 '
 ' ---Procedure Division ----------------+-----------------------------------------
 '
@@ -166,6 +175,7 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
         Application.CutCopyMode = False                     ' コピー状態の解除
         wsWrk.Cells(wrkY, 54) = 1                           '  (54)識別区分:BA列
         wrkY = wrkY + 1
+        oldCnt = oldCnt + 1
     Next j
 ' ②archivesシート
     jMin = arvYmin
@@ -181,6 +191,7 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
         Application.CutCopyMode = False                     ' コピー状態の解除
         wsWrk.Cells(wrkY, 54) = 2                           '  (54)識別区分:BA列
         wrkY = wrkY + 1
+        arvCnt = arvCnt + 1
     Next j
 
 ' ③変更住所録シート
@@ -197,6 +208,7 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
         Application.CutCopyMode = False                     ' コピー状態の解除
         wsWrk.Cells(wrkY, 54) = 3                           '  (54)識別区分:BA列
         wrkY = wrkY + 1
+        trnCnt = trnCnt + 1
     Next j
 
 ' オブジェクト変数の定義（共通）
@@ -235,8 +247,13 @@ Public Sub 初期化処理_R(ByVal dummy As Variant)
             .Apply
         End With
     End With
-    
-Stop
+' シート別のレコード件数をPublic変数にセット
+    cnt.old = oldCnt    ' ①原簿
+    cnt.arv = arvCnt    ' ②archive
+    cnt.trn = trnCnt    ' ③変更住所録
+    cnt.wrk = wrkCnt    ' work
+    cnt.new1 = newCnt   ' newの原簿レコード
+    cnt.new2 = newCnt   ' newのarchivesレコード
 
 End Sub
 
@@ -257,7 +274,7 @@ Private Sub importClear_R(ByVal p_sheetName As String)
 
 End Sub
 
-Private Sub importSheet_R(ByVal p_excelFile As String, ByVal p_objSheet As String, p_openFileMsg As String, _
+Private Sub importSheet_R(ByVal p_excelFile As String, ByVal p_objSheet As String, ByVal p_openFileMsg As String, _
                           ByRef p_srcFile As String, ByRef p_yMax As Long, ByRef p_xMax As Long)
 ' --------------------------------------+-----------------------------------------
 ' | @function   : コピー元のシートをこのブックの同じ名前のシート へコピー
