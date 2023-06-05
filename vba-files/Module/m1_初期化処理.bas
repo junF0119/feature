@@ -89,17 +89,19 @@ Public Sub m1_初期化処理_R(ByVal dummy As Variant)
     Dim j, jMin, jMax                   As Long         ' 同一レコードの範囲(行 row y)
     Dim inExcelpath                     As String
 
+
 ' ' 構造体の宣言
-' Type cntTbl
-'     old                                 As long     ' ①原簿
-'     arv                                 As long     ' ②archive
-'     trn                                 As long     ' ③変更住所録
-'     wrk                                 As long     ' work
-'     new1                                As long     ' newの原簿レコード
-'     new2                                As long     ' newのarchivwレコード
+' Type cntTbl                                                 ' 各レコードの件数をカウント
+'     old                                 As long = 0         '   ①原簿
+'     arv                                 As long = 0         '   ②archive
+'     trn                                 As long = 0         '   ③変更住所録
+'     wrk                                 As long = 0         '   work
+'     new1                                As long = 0         '   newの原簿レコード
+'     new2                                As long = 0         '   newのarchivwレコード
+'     new3                                As long = 0         '   newの変更住所録で新規レコード
 ' End Type
-    Dim cnt                             As cntTbl
-'
+Dim cnt                                 As cntTbl
+
 ' ---Procedure Division ----------------+-----------------------------------------
 '
 ' 1.1 前処理（共通）
@@ -124,13 +126,6 @@ Public Sub m1_初期化処理_R(ByVal dummy As Variant)
     Call importClear_R(Range("C_trnSheet"))                     ' ③変更住所録シートのクリア
     Call importClear_R(Range("C_newSheet"))                     ' 新住所録シートのクリア
     Call importClear_R("work")                                  ' 作業用シートのクリア
-
-' カウントをゼロ
-    oldCnt = 0
-    arvCnt = 0
-    trnCnt = 0
-    newCnt = 0
-    wrkCnt = 0
 
 ' 1.3 外部Excelから取り込む
 
@@ -175,7 +170,7 @@ Public Sub m1_初期化処理_R(ByVal dummy As Variant)
         Application.CutCopyMode = False                     ' コピー状態の解除
         wsWrk.Cells(wrkY, 54) = 1                           '  (54)識別区分:BA列
         wrkY = wrkY + 1
-        oldCnt = oldCnt + 1
+        cnt.old = cnt.old + 1
     Next j
 ' ②archivesシート
     jMin = arvYmin
@@ -191,7 +186,7 @@ Public Sub m1_初期化処理_R(ByVal dummy As Variant)
         Application.CutCopyMode = False                     ' コピー状態の解除
         wsWrk.Cells(wrkY, 54) = 2                           '  (54)識別区分:BA列
         wrkY = wrkY + 1
-        arvCnt = arvCnt + 1
+        cnt.arv = cnt.arv + 1
     Next j
 
 ' ③変更住所録シート
@@ -208,7 +203,7 @@ Public Sub m1_初期化処理_R(ByVal dummy As Variant)
         Application.CutCopyMode = False                     ' コピー状態の解除
         wsWrk.Cells(wrkY, 54) = 3                           '  (54)識別区分:BA列
         wrkY = wrkY + 1
-        trnCnt = trnCnt + 1
+        cnt.trn = cnt.trn + 1
     Next j
 
 ' オブジェクト変数の定義（共通）
@@ -247,13 +242,6 @@ Public Sub m1_初期化処理_R(ByVal dummy As Variant)
             .Apply
         End With
     End With
-' シート別のレコード件数をPublic変数にセット
-    cnt.old = oldCnt    ' ①原簿
-    cnt.arv = arvCnt    ' ②archive
-    cnt.trn = trnCnt    ' ③変更住所録
-    cnt.wrk = wrkCnt    ' work
-    cnt.new1 = newCnt   ' newの原簿レコード
-    cnt.new2 = newCnt   ' newのarchivesレコード
 
 End Sub
 
@@ -274,8 +262,12 @@ Private Sub importClear_R(ByVal p_sheetName As String)
 
 End Sub
 
-Private Sub importSheet_R(ByVal p_excelFile As String, ByVal p_objSheet As String, ByVal p_openFileMsg As String, _
-                          ByRef p_srcFile As String, ByRef p_yMax As Long, ByRef p_xMax As Long)
+Private Sub importSheet_R(ByVal p_excelFile As String _ 
+                        , ByVal p_objSheet As String _
+                        , ByVal p_openFileMsg As String _
+                        , ByRef p_srcFile As String _
+                        , ByRef p_yMax As Long _
+                        , ByRef p_xMax As Long)
 ' --------------------------------------+-----------------------------------------
 ' | @function   : コピー元のシートをこのブックの同じ名前のシート へコピー
 ' | @moduleName : m1_初期化処理
@@ -349,9 +341,7 @@ Private Sub importSheet_R(ByVal p_excelFile As String, ByVal p_objSheet As Strin
                                                          , Operation:=xlNone _
                                                          , SkipBlanks:=False _
                                                          , Transpose:=False
-    
-   
-    
+
     Application.CutCopyMode = False                         ' コピー状態の解除
     wbTmp.Close saveChanges:=False                          ' 保存しないでclose
 ' 表の大きさを得る

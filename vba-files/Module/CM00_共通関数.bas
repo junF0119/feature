@@ -4,8 +4,8 @@ Option Explicit
 ' | @function   : •W€“I‚É—˜—p‚³‚ê‚éƒ‚ƒWƒ…[ƒ‹‚ğ•W€ŠÖ”‚Æ‚µ‚Ä“‡
 ' --------------------------------------+-----------------------------------------
 ' | @moduleName : CM00_‹¤’ÊŠÖ”"
-' | @Version    : v3.0.2
-' | @update     : 2023/05/31
+' | @Version    : v3.0.3
+' | @update     : 2023/06/06
 ' | @written    : 2023/04/21
 ' | @author     : Jun Fujinawa
 ' | @license    : zStudio
@@ -53,24 +53,81 @@ Option Explicit
 ' |      Microsoft Visual Basic for Application Extensibilly 5.3
 ' |      Windows Script Host Object Model
 ' |
+' EƒV[ƒgƒ‚ƒWƒ…[ƒ‹ EEE ƒV[ƒg–ˆ‚É‘¶İ‚µ‚Ü‚·
+' EƒuƒbƒNƒ‚ƒWƒ…[ƒ‹ EEE ƒuƒbƒN‚Å‚P‚Â‚¾‚¯
+' EƒtƒH[ƒ€ƒ‚ƒWƒ…[ƒ‹ EEE ì‚Á‚½ƒtƒH[ƒ€‚Ì”‚¾‚¯
+' E•W€ƒ‚ƒWƒ…[ƒ‹ EEE D‚«‚È‚¾‚¯ì‚ê‚Ü‚·
+' EƒNƒ‰ƒX
+
+' ESubƒvƒƒV[ƒWƒƒ[
+' EFunctionƒvƒƒV[ƒWƒƒ[
+
+' ƒvƒƒV[ƒWƒƒ[ƒŒƒxƒ‹•Ï” EEE ƒvƒƒV[ƒWƒƒ[“à‚Å‚Ì‚İg—p‰Â”\
+' ƒ‚ƒWƒ…[ƒ‹ƒŒƒxƒ‹•Ï” EEE ƒ‚ƒWƒ…[ƒ‹“à‚Å‚Ì‚İg—p‰Â”\@ƒ‚ƒWƒ…[ƒ‹‚Ìæ“ªiÅ‰‚ÌSub‚Ü‚½‚ÍFunction‚æ‚è‘Oj‚É‘‚­
+
+' Dim EEE ‚»‚Ìƒ‚ƒWƒ…[ƒ‹‚Ì‚İ
+' Private EEE ‚»‚Ìƒ‚ƒWƒ…[ƒ‹‚Ì‚İ
+' Public EEE ‘S‚Ä‚Ìƒ‚ƒWƒ…[ƒ‹
+
+' VBA‚Å‚Í‚ ‚Ü‚èŒ¾‚í‚È‚¢‚æ‚¤‚Å‚·‚ªA‘¼‚ÌƒvƒƒOƒ‰ƒ~ƒ“ƒOŒ¾Œê‚Å‚ÍA
+' ƒOƒ[ƒoƒ‹•Ï”
+' ‚ÆŒ¾‚¤Œ¾‚¢•û‚à‚µ‚Ü‚·B
+
+' ƒ‚ƒWƒ…[ƒ‹‚Æ‚Í
+' ƒ‚ƒWƒ…[ƒ‹‚Ìí—Ş‚ÍˆÈ‰º‚É‚È‚è‚Ü‚·B
+' E•W€ƒ‚ƒWƒ…[ƒ‹
+' EƒuƒbƒNƒ‚ƒWƒ…[ƒ‹
+' EƒV[ƒgƒ‚ƒWƒ…[ƒ‹
+' Eƒ†[ƒU[ƒtƒH[ƒ€
+' EƒNƒ‰ƒXƒ‚ƒWƒ…[ƒ‹
+
+' •Ï”‚Ì“K—p”ÍˆÍ‚É‚Â‚¢‚ÄŠÈ’P‚É‚Ü‚Æ‚ß‚Ä‚é‚Æ
+' ƒvƒƒV[ƒWƒƒ[“à‚ÅéŒ¾‚µ‚½•Ï”‚Æˆø”‚ÍA‚»‚ÌƒvƒƒV[ƒWƒƒ[“à‚Ì‚İg—p‰Â”\
+' ƒ‚ƒWƒ…[ƒ‹‚Ìæ“ª‚ÅDim‚Ü‚½‚ÍPrivate‚ÅéŒ¾‚µ‚½•Ï”‚ÍA‚»‚Ìƒ‚ƒWƒ…[ƒ‹“à‚Å‚Ì‚İg—p‰Â”\
+' ƒ‚ƒWƒ…[ƒ‹‚Ìæ“ª‚ÅPublic‚ÅéŒ¾‚µ‚½•Ï”‚ÍA‘S‚Ä‚Ìƒ‚ƒWƒ…[ƒ‹‚Åg—p‰Â”\
+' •Ï”‚ÍA‘‚­êŠE‘‚«•û‚É‚æ‚Á‚Äg‚¦‚é”ÍˆÍ‚ª•Ï‚í‚è‚Ü‚·B
+
+' EDim‚ÅƒvƒƒV[ƒWƒƒ“àFƒvƒƒV[ƒWƒƒ‚Ì‚İg‚¦‚é
+' EDim‚ÅƒvƒƒV[ƒWƒƒŠOFƒ‚ƒWƒ…[ƒ‹“à‚Åg‚¦‚é
+' EPublic‚ÅƒvƒƒV[ƒWƒƒŠOFƒvƒƒWƒFƒNƒg‘S‘Ì‚Å‚Ç‚±‚©‚ç‚Å‚àg‚¦‚é
+' Œ¾—t‚¾‚¯‚¾‚Æ‚í‚©‚è‚Ã‚ç‚¢‚Ì‚ÅA‚»‚ê‚¼‚êƒTƒ“ƒvƒ‹‚ğŒğ‚¦‚Ä‰ğà‚µ‚Ü‚·‚ËB
+
+'  VBAƒvƒƒWƒFƒNƒg(ÀsƒvƒƒOƒ‰ƒ€j
+'         ----ƒ‚ƒWƒ…[ƒ‹1
+'                     -------ƒvƒƒV[ƒWƒƒ1
+'                     -------ƒvƒƒV[ƒWƒƒ2
+'                     -------ƒvƒƒV[ƒWƒƒ3
+
+'         ----ƒ‚ƒWƒ…[ƒ‹2
+'                     -------ƒvƒƒV[ƒWƒƒ1
+'                     -------ƒvƒƒV[ƒWƒƒ2
+'                     -------ƒvƒƒV[ƒWƒƒ3                    
+
 ' | @ƒfƒBƒŒƒNƒgƒŠ\‘¢} ß ƒtƒHƒ‹ƒ_\‘¢}
 ' |     1       1       1       1       1
 ' |  root/      RootPath (ƒVƒXƒeƒ€ƒtƒHƒ‹ƒ_‚ÌeƒtƒHƒ‹ƒ_@ƒ‹[ƒg‚©‚çƒVƒXƒeƒ€ƒtƒHƒ‹ƒ_‚Ì‘O‚Ü‚Å‚Ìƒtƒ‹ƒpƒXj
-' |     „ 
-' |     „¥ ƒVƒXƒeƒ€–¼@ SysPathiƒtƒ‹ƒpƒXj@SysNameiƒtƒHƒ‹ƒ_–¼j
-' |     „       „ 
-' |     „       „¥ ƒTƒuƒVƒXƒeƒ€–¼   SubSysPathiƒtƒ‹ƒpƒXj@SubSysNameiƒtƒHƒ‹ƒ_–¼j ieƒfƒBƒŒƒNƒgƒŠßeƒtƒHƒ‹ƒ_@../@ParentFolder)
+' |     „  (99.zStuidoLibrary)
+' |     „¥ nn.ƒVƒXƒeƒ€–¼@ SysPathiƒtƒ‹ƒpƒXj\@nn.n.SysNameiƒtƒHƒ‹ƒ_–¼j
+' |     „       „  (99.2.VZŠ˜^ŠÇ—(zz2))
+' |     „       „¥ nn.n.ƒTƒuƒVƒXƒeƒ€–¼   SubSysPathiƒtƒ‹ƒpƒXj@SubSysNameiƒtƒHƒ‹ƒ_–¼j ieƒfƒBƒŒƒNƒgƒŠßeƒtƒHƒ‹ƒ_@../@ParentFolder)
 ' |     „       „       „ 
-' |            „       „¥ !Repository(ŠJ”­ŠÂ‹«)
+' |     „       „       „¥ @README-VZŠ˜^‚Ì‰^—pJob‚Ì®”õ
+' |     „       „       „      „ 
+' |     „       „       „      „¥ !Repository(ŠJ”­ŠÂ‹«)
+' |     „       „       „      „¥ !‰^—p‚Ìèˆø‚«
+' |     „       „       „ 
+' |     „       „       „¥ 1.ƒ}ƒXƒ^[ŒQ
+' |     „       „       „ 
+' |            „       „¥ 2.Job-ƒWƒ‡ƒu–¼  folderPathiƒtƒ‹ƒpƒXj folderNameiƒtƒHƒ‹ƒ_–¼j (ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠßŠî“_ƒtƒHƒ‹ƒ_@@./@)
+' |                   „      „ 
+' |   ƒRƒsƒy—p‹L†W   „      „¥ 2.1.inputData
+' |-----------------  „      „¥ 2.2.proc-ÀsƒvƒƒOƒ‰ƒ€–¼(zz2)
+' |     „° „µ „º „¥       „      „    „ 
+' |     „  „«           „      „    „¥ zz2.x.x-›››-vX.Y.Z-yyyymmdd.xlms
+' |     „² „· „¼ „§       „      „    „¥ zz2.y.z-¢¢¢-vX.Y.Z-yyyymmdd.xlms
+' |     „¡ „¬ „­ „¢       „      „ 
+' |     „¤ „¯ „® „£       „      „¥ 2.3.outputData-NA
 ' |                   „ 
-' |   ƒRƒsƒy—p‹L†W   „¥ 1.‰^—p‚Ìèˆø‚«
-' |-----------------  „ 
-' |     „° „µ „º „¥       „¥ 2.ƒ}ƒXƒ^[ŒQ
-' |     „  „«           „ 
-' |     „² „· „¼ „§       „¥ 3.ÀsƒvƒƒOƒ‰ƒ€  folderPathiƒtƒ‹ƒpƒXj folderNameiƒtƒHƒ‹ƒ_–¼j (ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠßŠî“_ƒtƒHƒ‹ƒ_@@./@)
-' |     „¡ „¬ „­ „¢       „       „ 
-' |     „¤ „¯ „® „£       „       „¥ tmXX.YY.ZZ-›››-vX.Y.Z-yyyymmdd.xlms
-' |                   „       „¥ tmXX.YY.ZZ-¢¢¢-vX.Y.Z-yyyymmdd.xlms
 ' |                   „ 
 ' |                   „¥ 7.ŠÇ—ƒc[ƒ‹
 ' |                   „ 
@@ -80,8 +137,9 @@ Option Explicit
 ' |                   „ 
 ' --------------------------------------+----------------------------------------
 ' |  –½–¼‹K‘¥‚Ì“ˆê
-' |     Public•Ï”  æ“ª‚ğ‘å•¶š    ß pascalCase
-' |     private•Ï” æ“ª‚ğ¬•¶š    ß camelCase
+' |     Public•Ï”  æ“ª‚ğ‘å•¶š    ß pascalCase    cc Excel VBAƒVƒXƒeƒ€‚ÉŠÖ‚·‚é•Ï”--¨ ‹¤’ÊŠÖ”‚Å’è‹`
+' |                                                cc ƒvƒƒOƒ‰ƒ€‚Å‹¤’Ê‚Ì•Ï”--¨ m0_ƒƒCƒ“ƒ‚ƒWƒ…[ƒ‹‚Å’è‹`
+' |     private•Ï” æ“ª‚ğ¬•¶š    ß camelCase     
 ' |     ’è”        ‘S‚Ä‘å•¶šA‹æØ‚è•¶š‚ÍAƒAƒ“ƒ_[ƒXƒRƒA(_) ß snake_case
 ' |     ˆø”        Ú“ªŒê(p_)‚ğ‚Â‚¯AcamelCase‚É€‚¸‚é
 ' --------------------------------------+-----------------------------------------
@@ -91,7 +149,7 @@ Option Explicit
 '   ¦public•Ï”(“–ŠYƒvƒƒWƒFƒNƒg“à‚Ìƒ‚ƒWƒ…[ƒ‹ŠÔ‚Å‹¤—L)‚ÍAÅ‰‚ÉŒÄ‚Î‚ê‚éƒvƒƒVƒWƒƒ[‚É’è‹`
 '
 Public BackupFile                       As String       ' Às‘Oƒtƒ@ƒCƒ‹‚Ì•Û‘¶—pƒtƒHƒ‹ƒ_‚Ìƒtƒ‹ƒpƒX
-Public fullPath                         As String       ' ÀsExcel‚Ìƒtƒ‹ƒpƒX+ƒtƒ@ƒCƒ‹–¼ ß Thisworkbook
+Public FullPath                         As String       ' ÀsExcel‚Ìƒtƒ‹ƒpƒX+ƒtƒ@ƒCƒ‹–¼ ß Thisworkbook
 Public PathName                         As String       ' ÀsExcel‚Ìƒtƒ‹ƒpƒX
 Public FileName                         As String       ' ÀsExcel‚Ìƒtƒ@ƒCƒ‹–¼
 ' ƒfƒBƒŒƒNƒgƒŠ\‘¢‚ÌƒpƒX‚Æ–¼‘O
@@ -106,9 +164,9 @@ Public PrgName                          As String       ' ÀsExcel‚ÌƒvƒƒOƒ‰ƒ€–
 Public Version                          As String       ' vx.x.x
 Public Update                           As String       ' yyyymmdd
 ' ƒvƒƒOƒ‰ƒ€Às‚Ì“úî•ñ
-Public nowY                             As Integer      ' ¡“ú‚Ì”Ni”šj
-Public nowM                             As Integer      ' ¡“ú‚ÌŒi”šj
-Public nowD                             As Integer      ' ¡“ú‚Ì“úi”šj
+Public NowY                             As Integer      ' ¡“ú‚Ì”Ni”šj
+Public NowM                             As Integer      ' ¡“ú‚ÌŒi”šj
+Public NowD                             As Integer      ' ¡“ú‚Ì“úi”šj
 Public TimeStart                        As Variant      ' ƒvƒƒOƒ‰ƒ€ŠJn‚Ì“ú•t‚Æ
 Public TimeStop                         As Variant      ' ƒvƒƒOƒ‰ƒ€I—¹‚Ì“ú•t‚Æ
 Public TimeLap                          As Variant      ' ƒvƒƒOƒ‰ƒ€Às‚ÌŠ—vŠÔ
@@ -160,12 +218,12 @@ Sub get‹¤’Ê•Ï”_R(ByVal dummy As Variant)
     TimeStop = TimeStart
     TimeLap = TimeStop - TimeStart
     nowYMD = Now()               ' ¡“ú‚Ì“ú•t‚©‚ç”NAŒA“úAŒ––“ú‚ğ•ªŠ„
-    nowY = Year(nowYMD)
-    nowM = month(nowYMD)
-    nowD = Day(nowYMD)
+    NowY = Year(nowYMD)
+    NowM = month(nowYMD)
+    NowD = Day(nowYMD)
 
 ' ƒtƒ@ƒCƒ‹–¼‘®F .\.\SysID.xx.xx_programName-vX.Y.Z_yyyymmdd.sufix
-    fullPath = ActiveWorkbook.Path & "\" & ActiveWorkbook.Name
+    FullPath = ActiveWorkbook.Path & "\" & ActiveWorkbook.Name
     PathName = ActiveWorkbook.Path
     FileName = ActiveWorkbook.Name
     temp = Split(PathName, "\")
