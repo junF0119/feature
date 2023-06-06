@@ -1,4 +1,4 @@
-Attribute VB_Name = "m2_住所変更処理"
+Attribute VB_Name = "m2_レコード振分処理"
 Option Explicit
 ' --------------------------------------+-----------------------------------------
 ' | @function   : ③変更住所録で①原簿と②archivesを更新する
@@ -56,7 +56,7 @@ Private newY, newYmin, newYmax          As Long             ' j≡y 行　row
 ' Dim cnt                                 As cntTbl
 
 
-Public Sub m2_住所変更処理_R(ByVal dummy As Variant)
+Public Sub m2_レコード振分処理_R(ByVal dummy As Variant)
 ' --------------------------------------+-----------------------------------------
 ' |     workシートの前後のレコードを比較
 ' --------------------------------------+-----------------------------------------

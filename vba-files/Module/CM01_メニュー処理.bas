@@ -26,7 +26,7 @@ Option Explicit
 '     頭文字を小文字にする
 ' 個別定義
 
-Public Sub m1_メニュー処理_R(p_menu As Integer)
+Public Sub メニュー処理(p_menu As Integer)
 ' --------------------------------------+-----------------------------------------
 ' |     メイン処理
 ' |  [メニュー]sheetのボタンのクリックで、メインプログラムは呼び出される
@@ -53,7 +53,7 @@ Public Sub m1_メニュー処理_R(p_menu As Integer)
   
     Select Case MenuNum
         Case 1
-            Call m0_新住所録原簿更新処理_R("")
+            Call m0_住所録更新処理_R("")
         Case Else
             IsMsgPush ("プログラムのバグです。 中止します。")
             End
