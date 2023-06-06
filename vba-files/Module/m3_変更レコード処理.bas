@@ -93,7 +93,8 @@ Public Sub m3_変更レコード処理_R(ByVal dummy As Variant)
         sw_change = False
         For i = 6 To 41
             Select Case i
-                Case 6 To 15, 23 To 26                  ' 上書き項目
+' 上書き項目：(6)名前～(15)方書、(23)その他1～(26)備考
+                Case 6 To 15, 23 To 26                                      
                     If wsWrk.Cells(j, i).Value <> "" Then
                         If wsWrk.Cells(j, i).Value <> wsWrk.Cells(j + 1, i).Value Then
                             wsWrk.Cells(j + 2, i).Value = wsWrk.Cells(j, i).Value
@@ -102,14 +103,22 @@ Public Sub m3_変更レコード処理_R(ByVal dummy As Variant)
                             sw_change = True
                         End If
                     End If
-                    
-                Case 36 To 41                           ' 管理項目
+' 管理項目：(36)更新内容～(41)削除日
+                Case 36 To 41                                               
                     If wsWrk.Cells(j, i).Value <> "" Then
                         If wsWrk.Cells(j, i).Value <> wsWrk.Cells(j + 1, i).Value Then
                             
                         End If
                     End If
-                    
+' グループ項目：(16)携帯電話～(19)会社電話
+                Case 16 To 19
+                    call modifyItem_R(j, 16, 19, sw_change)
+
+
+' グループ項目：(20)携帯メール～(22)会社メール                          
+                Case 20 To 22
+                    call modifyItem_R(j, 20, 22, sw_change)
+
                 Case Else
             End Select
         Next i
@@ -119,111 +128,106 @@ Public Sub m3_変更レコード処理_R(ByVal dummy As Variant)
                 wsWrk.Cells(j + 2, i).Value = wsWrk.Cells(j, i).Value
             Next i
         End If
-            
-            
-            
-            
-
-        
-        
-        
     Next j
 
+End Sub
+
+
+Private Sub modifyItem_R(ByVal p_j As long _
+                       , ByVal p_from As long _
+                       , ByVal p_to As long _
+                       , ByRef p_modifySw As Boolean)
+' --------------------------------------+-----------------------------------------
+' | @function   : 変更レコードで更新
+' | @moduleName : modifyItem_R
+' | @remarks
+' | 引数の意味
+' | 引　数：p_j           行位置
+' | 引　数：p_from        列位置の開始
+' | 引　数：p_to          列位置の終了
+' | 戻り値：p_modifySw    変更有り ≡ True  、変更なし ≡ False
+' |
+' --------------------------------------+-----------------------------------------
+    Dim i, ii                           As long
+    Dim sameCnt                         As long = 0
+'
+' ---Procedure Division ----------------+-----------------------------------------
+'
+' --------------------------------------+-----------------------------------------
+'   グループ項目：(16)携帯電話～(19)会社電話
+'   グループ項目：(20)携帯メール～(22)会社メール
+' --------------------------------------+-----------------------------------------
+
+'                       wsWrk.Cells(j, i).Font.Color = rgbSnow          ' 文字色：スノー    #fafaff#
+'                       wsWrk.Cells(j, i).Interior.Color = rgbDarkRed   ' 背景色：濃い赤    #00008b#
 
 '                        Else
 '                            wsWrk.Cells(j, CHECKED_X).Value = "same"
- 
+' 変更項目数をカウント
+    For i = p_from To p_to
+        If wsWrk.Cells(p_j, i).Value <> "" Then
+            sameCnt = sameCnt + 1
+        End If
+    Next i
 
+' 変更内容が現行と同一の内容かチェック
+    For i = p_from To p_to
+        If wsWrk.Cells(p_j, i).Value <> "" Then
+            For ii = p_from To p_to
+                If wsWrk.Cells(p_j, i).Value = wsWrk.Cells(p_j + 1, ii).Value Then
+                    wsWrk.Cells(p_j, i).Value = ""   '同じ値が既にあるので、変更項目は、消去
+                    wsWrk.Cells(j, i).Interior.Color = rgbSnow      ' 背景色：スノー    #fafaff#
+                    sameCnt = sameCnt - 1
+                    Exit For
+                End If
+            Next ii
+        End If
+    Next i
 
+' 違う内容のものを空いてるセルにコピー
+    If sameCnt <> 0 Then
+        For i = p_from To p_to
+            If wsWrk.Cells(p_j, i).Value <> "" Then
+                For ii = p_from To p_to
+                    If wsWrk.Cells(p_j + 1, ii).Value = "" Then
+                        wsWrk.Cells(p_j + 1, ii).Value = wsWrk.Cells(p_j, i).Value
+                        wsWrk.Cells(p_j, i).Value = ""
+                        sameCnt = sameCnt - 1
+                        Exit For
+                    End If
+                Next ii
+            End If
+        Next i
+    End If
 
-' ' 上書き項目：(6)名前～(15)方書
-'       For r = 6 To 15
-'            If wsWrk.Cells(y, r).Value <> "" Then
-'                wsWrk.Cells(y + 2, r).Value = wsWrk.Cells(y, r).Value
-'            End If
-'        Next r
-'
-'' 上書き項目：(23)その他1～(26)備考
-'       For r = 23 To 26
-'            If wsWrk.Cells(y, r).Value <> "" Then
-'                wsWrk.Cells(y + 1, r).Value = wsWrk.Cells(y, r).Value
-'            End If
-'        Next r
-'
-'' 上書き項目：(36)更新内容～(41)削除日
-'        For r = 36 To 41
-'            If wsWrk.Cells(y, r).Value <> "" Then
-'                wsWrk.Cells(y + 1, r).Value = wsWrk.Cells(y, r).Value
-'            End If
-'        Next r
-'' 同一キーなので一つ飛ばし
-'    y = y + 1
-'
-'Next_R:
-'    Next y
-'
-'' グループ項目：(16)携帯電話～(19)会社電話
-'        Dim r1 As Long
-'        Dim sameCnt As Long
-'        sameCnt = 0
-'' 変更項目数をカウント
-'        For r = 16 To 19
-'            If wsWrk.Cells(y, r).Value <> "" Then
-'                sameCnt = sameCnt + 1
-'            End If
-'        Next r
-'
-'' 変更内容が現行と同一の内容かチェック
-'        For r = 16 To 19
-'            If wsWrk.Cells(y, r).Value <> "" Then
-'                For r1 = 16 To 19
-'                    If wsWrk.Cells(y, r).Value = wsWrk.Cells(y + 1, r1).Value Then
-'                        wsWrk.Cells(y + 1, r1).Value = ""
-'                        sameCnt = sameCnt - 1
-'                        Exit For
-'                    End If
-'                Next r1
-'            End If
-'        Next r
-'' 違う内容のものを空いてるセルにコピー
-'        If sameCnt <> 0 Then
-'            For r = 16 To 19
-'                If wsWrk.Cells(y, r).Value <> "" Then
-'                    For r1 = 16 To 19
-'                        If wsWrk.Cells(y + 1, r1).Value = "" Then
-'                            wsWrk.Cells(y + 1, r1).Value = wsWrk.Cells(y, r).Value
-'                            wsWrk.Cells(y, r).Value = ""
-'
-'                            Exit For
-'                        End If
-'                    Next r1
-'                End If
-'            Next r
-'        End If
-'
-'        wsWrk.Rows(y).ClearContents
-'        wsWrk.Cells(y + 1, CHECKED_X) = "Mod"
-'        wsWrk.Rows(y + 1).Copy Destination:=wsNew.Rows(newY)
-'        wsWrk.Rows(y + 1).ClearContents
-'
-'        Select Case wsNew.Cells(newY, MASTER_X).Value
-'            Case 1
-'                cnt.new1 = cnt.new1 + 1
-'            Case 2
-'                cnt.new2 = cnt.new2 + 1
-'            Case 3
-'                cnt.new3 = cnt.new3 + 1
-'            Case Else
-'                MsgBox "識別区分エラー=" & wsNew.Cells(newY, MASTER_X).Value
-'                End
-'        End Select
-'        newY = newY + 1
-'        y = y + 1   ' 同一keyが二つあるので、一つindexをくりあげる
-'
-'
-'Stop
+    if sameCnt <> 0 Then
+        msgbox "変更しきれなかった項目が残っています＝"　& sameCnt
+        stop
+    end if
+    
+'    wsWrk.Rows(j).ClearContents
+    wsWrk.Cells(p_j + 1, CHECKED_X) = "Mod"
+    newYmax = newYmax + 1
+    wsWrk.Rows(p_j + 1).Copy Destination:=wsNew.Rows(newYmax)
+'    wsWrk.Rows(p_j + 1).ClearContents
+
+    Select Case wsNew.Cells(newYmax, MASTER_X).Value
+        Case 1
+            cnt.new1 = cnt.new1 + 1
+        Case 2
+            cnt.new2 = cnt.new2 + 1
+        Case 3
+            cnt.new3 = cnt.new3 + 1
+        Case Else
+            MsgBox "識別区分エラー=" & wsNew.Cells(newY, MASTER_X).Value
+            End
+    End Select
+
+       
+
+Stop
         
-End Sub
+
 
 ' グループ項目：(20)携帯メール～(22)会社メール
 
