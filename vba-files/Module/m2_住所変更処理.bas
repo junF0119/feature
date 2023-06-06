@@ -1,3 +1,4 @@
+Attribute VB_Name = "m2_住所変更処理"
 Option Explicit
 ' --------------------------------------+-----------------------------------------
 ' | @function   : ③変更住所録で①原簿と②archivesを更新する
@@ -60,7 +61,7 @@ Public Sub m2_住所変更処理_R(ByVal dummy As Variant)
 ' |     workシートの前後のレコードを比較
 ' --------------------------------------+-----------------------------------------
     Dim cnt                             As cntTbl
-    Dim x, y                            As Long
+    Dim x, y, z                         As Long
     Dim CloseingMsg                     As String
     Dim w_rate, w_mod                   As Integer      ' 進捗率 / 表示間隔
     Dim i, iMin, iMax                   As Long         ' 同一レコードの範囲(列 col x)
@@ -86,7 +87,7 @@ Public Sub m2_住所変更処理_R(ByVal dummy As Variant)
     newYmax = wsNew.Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row              ' 最終行（縦方向）
     newXmax = wsNew.Cells(YMIN - 1, Columns.Count).End(xlToLeft).Column     ' 最終列（横方向）
 ' --------------------------------------+-----------------------------------------
-' step1. 単独レコードのみ先に新住所録シートへ移動する    
+' step1. 単独レコードのみ先に新住所録シートへ移動する
     newY = newYmin
     For y = wrkYmin To wrkYmax
         If wsWrk.Cells(y, PKEY_X).Value <> wsWrk.Cells(y + 1, PKEY_X).Value Then
@@ -106,8 +107,11 @@ Public Sub m2_住所変更処理_R(ByVal dummy As Variant)
                     End
             End Select
             newY = newY + 1
-            GoTo Next_R
+        Else
+            y = y + 1   ' 同一キーなので1行スキップ
         End If
+    Next y
+
 
 ' 同一keyの更新処理
 ' step1:(42)key姓名昇順、(54)識別区分(1…①原簿, 2…②archives, 3…③変更住所録)降順にソートし、単独レコードの行を除く
@@ -156,107 +160,140 @@ Public Sub m2_住所変更処理_R(ByVal dummy As Variant)
     newXmin = XMIN
     newYmax = wsNew.Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row              ' 最終行（縦方向）
     newXmax = wsNew.Cells(YMIN - 1, Columns.Count).End(xlToLeft).Column     ' 最終列（横方向）
-' (54)識別区分を 0 の afterレコードをコピーする
-    Dim addY as long = wrkYmax          ' 追加する行
-    For y = wrkYmin To wrkYmax step 2
-        If wsWrk.Cells(y, PKEY_X).Value = wsWrk.Cells(y + 1, PKEY_X).Value Then
-            wsWrk.Cells(y+1, CHECKED_X) = "added"
-            addY = addY + 1
-            wsWrk.Rows(y + 1).Copy Destination:=wsWrk.Rows(addY)
-            wsWrk.cells(addY, MASTER_RNG) = 0
-        Else
-            msgbox "重複キーは、２レコードのルール違反。要確認！！"
-            Stop
-            END
-        End If
-    next y
-stop
-' 上書き項目：(6)名前～(15)方書
-       For r = 6 To 15
-            If wsWrk.Cells(y, r).Value <> "" Then
-                wsWrk.Cells(y + 1, r).Value = wsWrk.Cells(y, r).Value
-            End If
-        Next r
-
-' 上書き項目：(23)その他1～(26)備考
-       For r = 23 To 26
-            If wsWrk.Cells(y, r).Value <> "" Then
-                wsWrk.Cells(y + 1, r).Value = wsWrk.Cells(y, r).Value
-            End If
-        Next r
-
-' 上書き項目：(36)更新内容～(41)削除日
-        For r = 36 To 41
-            If wsWrk.Cells(y, r).Value <> "" Then
-                wsWrk.Cells(y + 1, r).Value = wsWrk.Cells(y, r).Value
-            End If
-        Next r
-' 同一キーなので一つ飛ばし
-    y = y + 1
     
-Next_R:
+    wrkYmax = wsWrk.Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row              ' 最終行（縦方向）
+' (54)識別区分を 0 の afterレコードをコピーする
+    Dim addY As Long          ' 追加する行
+    wrkY = wrkYmax
+
+    For y = wrkYmin To wrkYmax Step 2
+        If wsWrk.Cells(y, PKEY_X).Value = wsWrk.Cells(y + 1, PKEY_X).Value Then
+            wsWrk.Cells(y + 1, CHECKED_X) = "before"
+            wrkY = wrkY + 1
+            wsWrk.Rows(y + 1).Copy Destination:=wsWrk.Rows(wrkY)
+            wsWrk.Cells(wrkY, CHECKED_X) = "after"
+            wsWrk.Cells(wrkY, Range(MASTER_RNG).Column) = 0
+        Else
+            MsgBox "重複キーは、２レコードのルール違反。要確認！！"
+            Stop
+            End
+        End If
     Next y
 
-' グループ項目：(16)携帯電話～(19)会社電話
-        Dim r1 As Long
-        Dim sameCnt As Long
-        sameCnt = 0
-' 変更項目数をカウント
-        For r = 16 To 19
-            If wsWrk.Cells(y, r).Value <> "" Then
-                sameCnt = sameCnt + 1
-            End If
-        Next r
-        
-' 変更内容が現行と同一の内容かチェック
-        For r = 16 To 19
-            If wsWrk.Cells(y, r).Value <> "" Then
-                For r1 = 16 To 19
-                    If wsWrk.Cells(y, r).Value = wsWrk.Cells(y + 1, r1).Value Then
-                        wsWrk.Cells(y + 1, r1).Value = ""
-                        sameCnt = sameCnt - 1
-                        Exit For
-                    End If
-                Next r1
-            End If
-        Next r
-' 違う内容のものを空いてるセルにコピー
-        If sameCnt <> 0 Then
-            For r = 16 To 19
-                If wsWrk.Cells(y, r).Value <> "" Then
-                    For r1 = 16 To 19
-                        If wsWrk.Cells(y + 1, r1).Value = "" Then
-                            wsWrk.Cells(y + 1, r1).Value = wsWrk.Cells(y, r).Value
-                            wsWrk.Cells(y, r).Value = ""
-                            
-                            Exit For
-                        End If
-                    Next r1
-                End If
-            Next r
-        End If
-        
-        wsWrk.Rows(y).ClearContents
-        wsWrk.Cells(y + 1, CHECKED_X) = "Mod"
-        wsWrk.Rows(y + 1).Copy Destination:=wsNew.Rows(newY)
-        wsWrk.Rows(y + 1).ClearContents
-            
-        Select Case wsNew.Cells(newY, MASTER_X).Value
-            Case 1
-                cnt.new1 = cnt.new1 + 1
-            Case 2
-                cnt.new2 = cnt.new2 + 1
-            Case 3
-                cnt.new3 = cnt.new3 + 1
-            Case Else
-                MsgBox "識別区分エラー=" & wsNew.Cells(newY, MASTER_X).Value
-                End
-        End Select
-        newY = newY + 1
-        y = y + 1   ' 同一keyが二つあるので、一つindexをくりあげる
-        
-        
-Stop
+   wrkYmax = wsWrk.Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row              ' 最終行（縦方向）
+' 昇順ソート　key: (39)姓名key(昇順)、(54)識別区分:BA列(降順）
+    With ActiveSheet                '対象シートをアクティブにする
+        .Sort.SortFields.Clear      '並び替え条件をクリア
+        '項目1
+        .Sort.SortFields.Add2 _
+             Key:=.Range(PKEY_RNG) _
+            , SortOn:=xlSortOnValues _
+            , Order:=xlAscending _
+            , DataOption:=xlSortNormal
+        '項目2
+        .Sort.SortFields.Add2 _
+             Key:=.Range(MASTER_RNG) _
+            , SortOn:=xlSortOnValues _
+            , Order:=xlDescending _
+            , DataOption:=xlSortNormal
+'並び替えを実行する
+        With .Sort
+            .SetRange Range(Cells(wrkYmin - 1, wrkXmin), Cells(wrkYmax, wrkXmax))
+            .Header = xlYes
+            .MatchCase = False
+            .Orientation = xlTopToBottom
+            .SortMethod = xlPinYin
+            .Apply
+        End With
+    End With
+
+
+'' 上書き項目：(6)名前～(15)方書
+'       For r = 6 To 15
+'            If wsWrk.Cells(y, r).Value <> "" Then
+'                wsWrk.Cells(y + 1, r).Value = wsWrk.Cells(y, r).Value
+'            End If
+'        Next r
+'
+'' 上書き項目：(23)その他1～(26)備考
+'       For r = 23 To 26
+'            If wsWrk.Cells(y, r).Value <> "" Then
+'                wsWrk.Cells(y + 1, r).Value = wsWrk.Cells(y, r).Value
+'            End If
+'        Next r
+'
+'' 上書き項目：(36)更新内容～(41)削除日
+'        For r = 36 To 41
+'            If wsWrk.Cells(y, r).Value <> "" Then
+'                wsWrk.Cells(y + 1, r).Value = wsWrk.Cells(y, r).Value
+'            End If
+'        Next r
+'' 同一キーなので一つ飛ばし
+'    y = y + 1
+'
+'Next_R:
+'    Next y
+'
+'' グループ項目：(16)携帯電話～(19)会社電話
+'        Dim r1 As Long
+'        Dim sameCnt As Long
+'        sameCnt = 0
+'' 変更項目数をカウント
+'        For r = 16 To 19
+'            If wsWrk.Cells(y, r).Value <> "" Then
+'                sameCnt = sameCnt + 1
+'            End If
+'        Next r
+'
+'' 変更内容が現行と同一の内容かチェック
+'        For r = 16 To 19
+'            If wsWrk.Cells(y, r).Value <> "" Then
+'                For r1 = 16 To 19
+'                    If wsWrk.Cells(y, r).Value = wsWrk.Cells(y + 1, r1).Value Then
+'                        wsWrk.Cells(y + 1, r1).Value = ""
+'                        sameCnt = sameCnt - 1
+'                        Exit For
+'                    End If
+'                Next r1
+'            End If
+'        Next r
+'' 違う内容のものを空いてるセルにコピー
+'        If sameCnt <> 0 Then
+'            For r = 16 To 19
+'                If wsWrk.Cells(y, r).Value <> "" Then
+'                    For r1 = 16 To 19
+'                        If wsWrk.Cells(y + 1, r1).Value = "" Then
+'                            wsWrk.Cells(y + 1, r1).Value = wsWrk.Cells(y, r).Value
+'                            wsWrk.Cells(y, r).Value = ""
+'
+'                            Exit For
+'                        End If
+'                    Next r1
+'                End If
+'            Next r
+'        End If
+'
+'        wsWrk.Rows(y).ClearContents
+'        wsWrk.Cells(y + 1, CHECKED_X) = "Mod"
+'        wsWrk.Rows(y + 1).Copy Destination:=wsNew.Rows(newY)
+'        wsWrk.Rows(y + 1).ClearContents
+'
+'        Select Case wsNew.Cells(newY, MASTER_X).Value
+'            Case 1
+'                cnt.new1 = cnt.new1 + 1
+'            Case 2
+'                cnt.new2 = cnt.new2 + 1
+'            Case 3
+'                cnt.new3 = cnt.new3 + 1
+'            Case Else
+'                MsgBox "識別区分エラー=" & wsNew.Cells(newY, MASTER_X).Value
+'                End
+'        End Select
+'        newY = newY + 1
+'        y = y + 1   ' 同一keyが二つあるので、一つindexをくりあげる
+'
+'
+'Stop
         
 End Sub
 
@@ -344,5 +381,7 @@ End Sub
 ''             "|old:" & oldY & "=" & Left(wsold.Cells(oldY, 3), 10) & Chr(9) & _
 ''             "|trn:" & trnY & "=" & Left(wstrn.Cells(trnY, 3), 10)
 'End If
+
+
 
 

@@ -59,21 +59,39 @@ Public Const INPUTX_TO                  As Long = 26        ' 入力項目終了列"Z"
 Public Const CHECKED_X                  As Long = 1         ' チェック欄（自由）
 Public Const PRIMARYKEY_X               As Long = 53        ' PrimaryKeyの列"BA"
 Public Const MASTER_RNG                 As String = "BB3"   ' workシート専用「識別区分」のセル番号"BB3"
+Public Const MASTER_X                   As Long = 54        ' workシート専用「識別区分」の列番号"BB"
 
-'   +   +   +   +   +   +   +   +   +   +   +   +   +   +   x   +   +   +   +   +   +
-
+' ①原簿シートの定義
+Public Wb                               As Workbook         ' このブック
+Public wsSrc                            As Worksheet
+Public SrcX, SrcXmin, SrcXmax           As Long             ' i≡x 列　column
+Public SrcY, SrcYmin, SrcYmax           As Long             ' j≡y 行　row
+Public SrcCnt                           As Long             ' レコード全件の件数
+' ②archives シートの定義 ∵ 削除レコード
+Public wsArv                            As Worksheet
+Public arvX, arvXmin, arvXmax           As Long             ' i≡x 列　column
+Public arvY, arvYmin, arvYmax           As Long             ' j≡y 行　row
+Public arvCnt                           As Long             ' 削除レコードの件数
+' ③目視 シートの定義
+Public WsEye                            As Worksheet
+Public EyeX, EyeXmin, EyeXmax           As Long             ' i≡x 列　column
+Public EyeY, EyeYmin, EyeYmax           As Long             ' j≡y 行　row
+Public EyeCnt                           As Long             ' 目視レコードの件数
+' debug2Fileのfil番号
+Public FileNum                          As Long
+' --------------------------------------+-----------------------------------------
 ' 構造体の宣言
-Type cntTbl                                                 ' 各レコードの件数をカウント
-    old                                 As long = 0         '   ①原簿
-    arv                                 As long = 0         '   ②archive
-    trn                                 As long = 0         '   ③変更住所録
-    wrk                                 As long = 0         '   work
-    new1                                As long = 0         '   newの原簿レコード
-    new2                                As long = 0         '   newのarchivwレコード
-    new3                                As long = 0         '   newの変更住所録で新規レコード
+Type cntTbl
+    old                                 As Long     ' ①原簿
+    arv                                 As Long     ' ②archive
+    trn                                 As Long     ' ③変更住所録
+    wrk                                 As Long     ' work
+    new1                                As Long     ' newの原簿レコード
+    new2                                As Long     ' newのarchivwレコード
+    new3                                As Long     ' newの変更住所録で新規レコード
 End Type
-' Dim cnt                             As cntTbl
-
+' --------------------------------------+-----------------------------------------
+'   +   +   +   +   +   +   +   +   +   +   +   +   +   +   x   +   +   +   +   +   +
 
 Public Sub m0_新住所録原簿更新処理_R(ByVal dummy As Variant)
 ' --------------------------------------+-----------------------------------------

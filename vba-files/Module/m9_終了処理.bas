@@ -1,67 +1,70 @@
+Attribute VB_Name = "m9_I—¹ˆ—"
 Option Explicit
 ' --------------------------------------+-----------------------------------------
-' | @function   : çµ‚äº†å‡¦ç†
+' | @function   : I—¹ˆ—
 ' --------------------------------------+-----------------------------------------
-' | @moduleName : m9_çµ‚äº†å‡¦ç†
+' | @moduleName : m9_I—¹ˆ—
 ' | @Version    : v1.1.0
 ' | @update     : 2023/05/22
 ' | @written    : 2023/05/16
 ' | @author     : Jun Fujinawa
 ' | @license    : zStudio
 ' | @remarks
-' |ã€€ã“ã®Jobã¯ã€æ¬¡ã®å‡¦ç†ã‚’è¡Œã„ã€ç™»éŒ²ãƒ‡ãƒ¼ã‚¿ã®æ•´åˆæ€§ã‚’æ¤œè¨¼ã—ã€è‡ªå‹•ã§ä¿®å¾©ã™ã‚‹ã€‚
-' |1.1ã€€ã€€Jobã®åˆæœŸå‡¦ç†ã¨ã¨ã—ã¦ã€æ›´æ–°å‰ã®ã‚·ãƒ¼ãƒˆãŒã‚³ãƒ”ãƒ¼ã•ã‚ŒãŸæ™‚ç‚¹ã§ã€ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã‚’ä¿å­˜ã—ã¾ã™ã€‚
-' |ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¯ã€å…¥åŠ›ãƒ‡ãƒ¼ã‚¿ã®ä¿å…¨ã‹ã‚‰å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«ã¯èª­ã‚€ã ã‘ã§ã€æ›´æ–°ã¯è¡Œã£ã¦ã„ã¾ã›ã‚“ã€‚
-' |ä¸‡ä¸€ã€å…ƒã®ãƒ‡ãƒ¼ã‚¿ãŒå£Šã‚ŒãŸã¨ããªã©ã«ã¯ã€ã‚³ãƒ”ãƒ¼ã—ãŸã‚·ãƒ¼ãƒˆã‹ã‚‰å¾©å…ƒã™ã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚
+' |@‚±‚ÌJob‚ÍAŽŸ‚Ìˆ—‚ðs‚¢A“o˜^ƒf[ƒ^‚Ì®‡«‚ðŒŸØ‚µAŽ©“®‚ÅC•œ‚·‚éB
+' |1.1@@Job‚Ì‰Šúˆ—‚Æ‚Æ‚µ‚ÄAXV‘O‚ÌƒV[ƒg‚ªƒRƒs[‚³‚ê‚½Žž“_‚ÅA‚±‚ÌƒvƒƒOƒ‰ƒ€‚ÌƒoƒbƒNƒAƒbƒv‚ð•Û‘¶‚µ‚Ü‚·B
+' |‚±‚ÌƒvƒƒOƒ‰ƒ€‚ÍA“ü—Íƒf[ƒ^‚Ì•Û‘S‚©‚ç“ü—Íƒtƒ@ƒCƒ‹‚Í“Ç‚Þ‚¾‚¯‚ÅAXV‚Ís‚Á‚Ä‚¢‚Ü‚¹‚ñB
+' |–œˆêAŒ³‚Ìƒf[ƒ^‚ª‰ó‚ê‚½‚Æ‚«‚È‚Ç‚É‚ÍAƒRƒs[‚µ‚½ƒV[ƒg‚©‚ç•œŒ³‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 ' |
-' |1.2ã€€ãƒã‚§ãƒƒã‚¯ãƒ¬ãƒ™ãƒ«ã¯ã€å•é¡Œãªã—ã€è‡ªå‹•ä¿®å¾©ã€ãƒžãƒ‹ãƒ¥ã‚¢ãƒ«ä¿®æ­£ã§ãƒãƒƒã‚¯æ¬„ã«ãƒžãƒ¼ã‚¯ã‚’ä»˜ã™
+' |1.2@ƒ`ƒFƒbƒNƒŒƒxƒ‹‚ÍA–â‘è‚È‚µAŽ©“®C•œAƒ}ƒjƒ…ƒAƒ‹C³‚Åƒ`ƒbƒN—“‚Éƒ}[ƒN‚ð•t‚·
 ' |
-' |1.3ã€€ã€€ï¼»ä¿®æ­£å®Œäº†ï¼½ãƒœã‚¿ãƒ³ã‚’æŠ¼ä¸‹ã™ã‚‹ã“ã¨ã§ã€æ›´æ–°å¾Œã®ã‚·ãƒ¼ãƒˆã¸ä¿®æ­£å¾Œã®ãƒ¬ã‚³ãƒ¼ãƒ‰ãŒã‚³ãƒ”ãƒ¼ã•ã‚Œã‚‹
-' |1.4ã€€ã€€ã‚³ãƒ”ãƒ¼å¾Œã¯ã€ãã‚Œãžã‚Œã®ã‚·ãƒ¼ãƒˆã‚’ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã¨æ—¥ä»˜ã‚’å¤‰æ›´ã—ã€ãã‚Œãžã‚Œã®ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼ã¸Exportã™ã‚‹
+' |1.3@@mC³Š®—¹nƒ{ƒ^ƒ“‚ð‰Ÿ‰º‚·‚é‚±‚Æ‚ÅAXVŒã‚ÌƒV[ƒg‚ÖC³Œã‚ÌƒŒƒR[ƒh‚ªƒRƒs[‚³‚ê‚é
+' |1.4@@ƒRƒs[Œã‚ÍA‚»‚ê‚¼‚ê‚ÌƒV[ƒg‚ðƒo[ƒWƒ‡ƒ“‚Æ“ú•t‚ð•ÏX‚µA‚»‚ê‚¼‚ê‚ÌƒtƒHƒ‹ƒ_[‚ÖExport‚·‚é
 ' |
-' |        ãƒ—ãƒ­ã‚°ãƒ©ãƒ æ§‹é€ 
-' |            1. åˆæœŸå‡¦ç†
-' |                1.1 æ—¢å­˜ã‚·ãƒ¼ãƒˆã®ã‚¯ãƒªã‚¢
+' |        ƒvƒƒOƒ‰ƒ€\‘¢
+' |            1. ‰Šúˆ—
+' |                1.1 Šù‘¶ƒV[ƒg‚ÌƒNƒŠƒA
 ' |                    importClear_R()
-' |                1.2 å¤–éƒ¨ã®ãƒžã‚¹ã‚¿ãƒ¼ã®ã‚·ãƒ¼ãƒˆã‚’å–ã‚Šè¾¼ã‚€â€¦â€¦ M-â‘ æ–°ä½æ‰€éŒ²åŽŸç°¿ / M-â‘¡Archives
+' |                1.2 ŠO•”‚Ìƒ}ƒXƒ^[‚ÌƒV[ƒg‚ðŽæ‚èž‚Þcc M-‡@VZŠ˜^Œ´•ë / M-‡AArchives
 ' |                    importSheet_R()(
-' |            2. ãƒ‡ãƒ¼ã‚¿ã®æ•´åˆæ€§æ¤œè¨¼
-' |                2.1  é‡è¤‡ãƒã‚§ãƒƒã‚¯â€¦â€¦ (53)PrimaryKey / (42)keyå§“å
+' |            2. ƒf[ƒ^‚Ì®‡«ŒŸØ
+' |                2.1  d•¡ƒ`ƒFƒbƒNcc (53)PrimaryKey / (42)key©–¼
 ' |                    keyCheck_F()
 ' |                        arrSet_R()
 ' |                        duplicateChk_F()
 ' |                            quickSort_R()
-' |                 2.2ã€€ã‚­ãƒ¼é …ç›®ã®Nullå€¤ãƒã‚§ãƒƒã‚¯ã¨å¾©æ—§
+' |                 2.2@ƒL[€–Ú‚ÌNull’lƒ`ƒFƒbƒN‚Æ•œ‹Œ
 ' |
 ' |
 ' |
 ' |
 ' |
 ' --------------------------------------+----------------------------------------
-' |  å‘½åè¦å‰‡ã®çµ±ä¸€
-' |     Publicå¤‰æ•°  å…ˆé ­ã‚’å¤§æ–‡å­—    â‰¡ pascalCase
-' |     privateå¤‰æ•° å…ˆé ­ã‚’å°æ–‡å­—    â‰¡ camelCase
-' |     å®šæ•°        å…¨ã¦å¤§æ–‡å­—ã€åŒºåˆ‡ã‚Šæ–‡å­—ã¯ã€ã‚¢ãƒ³ãƒ€ãƒ¼ã‚¹ã‚³ã‚¢(_) â‰¡ snake_case
-' |     å¼•æ•°        æŽ¥é ­èªž(p_)ã‚’ã¤ã‘ã€camelCaseã«æº–ãšã‚‹
+' |  –½–¼‹K‘¥‚Ì“ˆê
+' |     Public•Ï”  æ“ª‚ð‘å•¶Žš    ß pascalCase
+' |     private•Ï” æ“ª‚ð¬•¶Žš    ß camelCase
+' |     ’è”        ‘S‚Ä‘å•¶ŽšA‹æØ‚è•¶Žš‚ÍAƒAƒ“ƒ_[ƒXƒRƒA(_) ß snake_case
+' |     ˆø”        Ú“ªŒê(p_)‚ð‚Â‚¯AcamelCase‚É€‚¸‚é
 ' --------------------------------------+-----------------------------------------
 '   +   +   +   +   +   +   +   +   +   +   +   +   +   +   x   +   +   +   +   +   +
 
-Public Sub m9_çµ‚äº†å‡¦ç†_R(ByVal dummy As Variant)
+Public Sub m9_I—¹ˆ—_R(ByVal dummy As Variant)
 '
 ' ---Procedure Division ----------------+-----------------------------------------
 '
-' 9.0 çµ‚äº†å‡¦ç†
+' 9.0 I—¹ˆ—
 
 
-    CloseingMsg = "|â‘ åŽŸç°¿ã‚·ãƒ¼ãƒˆ" & Chr(9) & "ï¼ " & SrcCnt & Chr(13) _
-                & "|â‘¡archives" & Chr(9) & "ï¼ " & arvCnt & Chr(13) _
-                & "|â‘¢ç›®è¦–" & Chr(9) & "ï¼ " & EyeCnt & Chr(13) _
-                & "| ã‚¨ãƒ©ãƒ¼" & Chr(9) & "ï¼ " & ErrCnt & Chr(13)
+    CloseingMsg = "|‡@Œ´•ëƒV[ƒg" & Chr(9) & " " & SrcCnt & Chr(13) _
+                & "|‡Aarchives" & Chr(9) & " " & arvCnt & Chr(13) _
+                & "|‡B–ÚŽ‹" & Chr(9) & " " & EyeCnt & Chr(13) _
+                & "| ƒGƒ‰[" & Chr(9) & " " & ErrCnt & Chr(13)
                     
-    Call å¾Œå‡¦ç†_R(CloseingMsg & Chr(13) & "ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¯æ­£å¸¸çµ‚äº†ã—ã¾ã—ãŸã€‚")
+    Call Œãˆ—_R(CloseingMsg & Chr(13) & "ƒvƒƒOƒ‰ƒ€‚Í³íI—¹‚µ‚Ü‚µ‚½B")
     
 
 End Sub
+
+
 
 
 
