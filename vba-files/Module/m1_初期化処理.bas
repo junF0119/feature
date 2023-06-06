@@ -272,6 +272,17 @@ Private Sub importClear_R(ByVal p_sheetName As String)
 '  シートに関係なく、データ域を一律クリア（ヘッダー域は除く）
     Range(Cells(YMIN, XMIN), Cells(yMax, XMAX + 1)).Select
     Selection.ClearContents
+ '
+    Sheets("template(削除・変更厳禁)").Select
+    Range("A4:BB2000").Select
+    Selection.Copy
+    
+    Sheets(p_sheetName).Select
+    Range("A4").Select
+    Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, _
+        SkipBlanks:=False, Transpose:=False
+   
+    
 
 End Sub
 

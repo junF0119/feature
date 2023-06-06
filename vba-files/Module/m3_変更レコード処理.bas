@@ -65,7 +65,7 @@ Public Sub m3_変更レコード処理_R(ByVal dummy As Variant)
     Dim j, jMin, jMax                   As Long         ' 同一レコードの範囲(行 row y)
     Dim r                               As Long         ' 変更項目の列番号
 
-    Dim sw_change                       as Boolean      ' true ≡ 変更箇所有り　/　False ≡ 〃　無し
+    Dim sw_change                       As Boolean      ' true ≡ 変更箇所有り　/　False ≡ 〃　無し
 
 '
 ' ---Procedure Division ----------------+-----------------------------------------
@@ -89,27 +89,49 @@ Public Sub m3_変更レコード処理_R(ByVal dummy As Variant)
 
 ' --------------------------------------+-----------------------------------------
 ' 同一キーの(42)key姓名が、3→1or2→0　の順に並ぶので、変更項目を 0 レコードを更新し、新住所録シートへコピーする
-    for j = wrkYmin to wrkYmax step 3
+    For j = wrkYmin To wrkYmax Step 3
         sw_change = False
-        for i = 6 to 41
-            select case i
-                case 6 to 15, 23 to 26, 36 to 41        ' 上書き項目
+        For i = 6 To 41
+            Select Case i
+                Case 6 To 15, 23 To 26                  ' 上書き項目
                     If wsWrk.Cells(j, i).Value <> "" Then
-                        If wsWrk.Cells(j, i).Value <> wsWrk.Cells(j + 1, i).Value
+                        If wsWrk.Cells(j, i).Value <> wsWrk.Cells(j + 1, i).Value Then
                             wsWrk.Cells(j + 2, i).Value = wsWrk.Cells(j, i).Value
-                            sw_change = true
-                        Else
-                            wsWrk.Cells(j, CHECKED_X).Value = "same"
                             wsWrk.Cells(j, i).Font.Color = rgbSnow          ' 文字色：スノー    #fafaff#
                             wsWrk.Cells(j, i).Interior.Color = rgbDarkRed   ' 背景色：濃い赤    #00008b#
+                            sw_change = True
                         End If
                     End If
-                case Else
-            end select
-        next i
-    next j
+                    
+                Case 36 To 41                           ' 管理項目
+                    If wsWrk.Cells(j, i).Value <> "" Then
+                        If wsWrk.Cells(j, i).Value <> wsWrk.Cells(j + 1, i).Value Then
+                            
+                        End If
+                    End If
+                    
+                Case Else
+            End Select
+        Next i
+' 変更した項目があるときは、管理項目も更新する
+        If sw_change Then
+            For i = 36 To 41
+                wsWrk.Cells(j + 2, i).Value = wsWrk.Cells(j, i).Value
+            Next i
+        End If
+            
+            
+            
+            
+
+        
+        
+        
+    Next j
 
 
+'                        Else
+'                            wsWrk.Cells(j, CHECKED_X).Value = "same"
  
 
 
