@@ -48,17 +48,38 @@ Option Explicit
 '   +   +   +   +   +   +   +   +   +   +   +   +   +   +   x   +   +   +   +   +   +
 
 Public Sub m9_終了処理_R(ByVal dummy As Variant)
+'' 構造体の宣言
+'Public Type cntTbl
+'    old                                 As Long     ' ①原簿
+'    arv                                 As Long     ' ②archive
+'    trn                                 As Long     ' ③変更住所録
+'    wrk                                 As Long     ' work
+'    new1                                As Long     ' newの原簿レコード
+'    new2                                As Long     ' newのarchivwレコード
+'    new3                                As Long     ' newの変更住所録で新規レコード
+'    mod                                 As Long     ' 変更レコード
+'    add                                 As Long     ' 新規レコード
+'End Type
+'Public Cnt                              As cntTbl
+
 '
 ' ---Procedure Division ----------------+-----------------------------------------
 '
 ' 9.0 終了処理
 
 
-    CloseingMsg = "|①原簿シート" & Chr(9) & "＝ " & SrcCnt & Chr(13) _
-                & "|②archives" & Chr(9) & "＝ " & arvCnt & Chr(13) _
-                & "|③目視" & Chr(9) & "＝ " & EyeCnt & Chr(13) _
-                & "| エラー" & Chr(9) & "＝ " & ErrCnt & Chr(13)
-                    
+    CloseingMsg = "|①原簿シート" & Chr(9) & "＝ " & Cnt.old & Chr(13) _
+                & "|②archives" & Chr(9) & "＝ " & Cnt.arv & Chr(13) _
+                & "|③変更住所録" & Chr(9) & "＝ " & Cnt.trn & Chr(13) _
+                & "|作業レコード" & Chr(9) & "＝ " & Cnt.wrk & Chr(13) _
+                & "|住所録(更新後)" & Chr(9) & "＝ " & Cnt.new1 + Cnt.new2 + Cnt.new3 & Chr(13) _
+                & "| (内訳)①原稿" & Chr(9) & "＝ " & Cnt.new1 & Chr(13) _
+                & "| (内訳)②archive" & Chr(9) & "＝ " & Cnt.new2 & Chr(13) _
+                & "| (内訳)③新規" & Chr(9) & "＝ " & Cnt.new3 & Chr(13) _
+                & "|変更レコード" & Chr(9) & "＝ " & Cnt.mod & Chr(13) _
+                & "|追加レコード" & Chr(9) & "＝ " & Cnt.add & Chr(13)
+                
+                
     Call 後処理_R(CloseingMsg & Chr(13) & "プログラムは正常終了しました。")
     
 

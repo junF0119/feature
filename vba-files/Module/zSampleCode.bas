@@ -239,7 +239,7 @@ Private Sub importSheet_R(ByVal dummy As Variant) '
 ' 昇順ソート　key: 姓名key
     With ActiveSheet
         .Sort.SortFields.Clear
-        .Sort.SortFields.Add Key:=.Range(PKEY_RNG), Order:=xlAscending
+        .Sort.SortFields.add Key:=.Range(PKEY_RNG), Order:=xlAscending
         .Sort.SetRange .Range(Cells(YMIN, XMIN), Cells(workYmax, XMAX))
         .Sort.Apply
     End With

@@ -90,16 +90,20 @@ Public Sub m1_初期化処理_R(ByVal dummy As Variant)
     Dim j, jMin, jMax                   As Long         ' 同一レコードの範囲(行 row y)
     Dim inExcelpath                     As String
 
-' ' 構造体の宣言
-' Type cntTbl
-'     old                                 As long     ' ①原簿
-'     arv                                 As long     ' ②archive
-'     trn                                 As long     ' ③変更住所録
-'     wrk                                 As long     ' work
-'     new1                                As long     ' newの原簿レコード
-'     new2                                As long     ' newのarchivwレコード
-' End Type
-    Dim cnt                             As cntTbl
+'' 構造体の宣言
+'Public Type cntTbl
+'    old                                 As Long     ' ①原簿
+'    arv                                 As Long     ' ②archive
+'    trn                                 As Long     ' ③変更住所録
+'    wrk                                 As Long     ' work
+'    new1                                As Long     ' newの原簿レコード
+'    new2                                As Long     ' newのarchivwレコード
+'    new3                                As Long     ' newの変更住所録で新規レコード
+'    mod                                 As Long     ' 変更レコード
+'    add                                 As Long     ' 新規レコード
+'End Type
+'Public Cnt                              As cntTbl
+
 '
 ' ---Procedure Division ----------------+-----------------------------------------
 '
@@ -249,13 +253,15 @@ Public Sub m1_初期化処理_R(ByVal dummy As Variant)
         End With
     End With
 ' シート別のレコード件数をPublic変数にセット
-    cnt.old = oldCnt    ' ①原簿
-    cnt.arv = arvCnt    ' ②archive
-    cnt.trn = trnCnt    ' ③変更住所録
-    cnt.wrk = wrkCnt    ' work
-    cnt.new1 = newCnt   ' newの原簿レコード
-    cnt.new2 = newCnt   ' newのarchivesレコード
-
+    Cnt.old = oldCnt    ' ①原簿
+    Cnt.arv = arvCnt    ' ②archive
+    Cnt.trn = trnCnt    ' ③変更住所録
+    Cnt.wrk = wrkCnt    ' work
+    Cnt.new1 = 0        ' newの原簿レコード
+    Cnt.new2 = 0        ' newのarchivesレコード
+    Cnt.new3 = 0        ' newの変更住所録で新規レコード
+    Cnt.mod = 0         ' 変更レコード
+    Cnt.add = 0         ' 追加レコード
 End Sub
 
 Private Sub importClear_R(ByVal p_sheetName As String)
