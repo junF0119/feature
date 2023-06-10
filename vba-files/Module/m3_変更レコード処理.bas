@@ -90,8 +90,10 @@ Public Sub m3_変更レコード処理_R(ByVal dummy As Variant)
 ' --------------------------------------+-----------------------------------------
 ' 同一キーの(42)key姓名が、3→1or2→0　の順に並ぶので、変更項目で 0 レコードを更新し、新住所録シートへコピーする
     For j = wrkYmin To wrkYmax Step 3
-        wsWrk.Range(Cells(j + 1, 1), Cells(j + 1, wrkXmax)).Font.Color = rgbSnow             ' 文字色：スノー    #fafaff#
-        wsWrk.Range(Cells(j + 1, 1), Cells(j + 1, wrkXmax)).Interior.Color = rgbDodgerBlue   ' 背景色：ドジャーブルー    #ff901e#
+        wsWrk.Range(Cells(j, 1), Cells(j, wrkXmax)).Font.Color = rgbBlack                   ' 文字色：黒　      #000000#
+        wsWrk.Range(Cells(j, 1), Cells(j, wrkXmax)).Interior.Color = rgbKhaki               ' 背景色：カーキ    #8ce6f0#
+        wsWrk.Range(Cells(j + 1, 1), Cells(j + 1, wrkXmax)).Font.Color = rgbSnow            ' 文字色：スノー    #fafaff#
+        wsWrk.Range(Cells(j + 1, 1), Cells(j + 1, wrkXmax)).Interior.Color = rgbDodgerBlue  ' 背景色：ドジャーブルー    #ff901e#
 
         sw_change = False
         For i = 6 To 41
@@ -101,8 +103,8 @@ Public Sub m3_変更レコード処理_R(ByVal dummy As Variant)
                     If wsWrk.Cells(j, i).Value <> "" Then
                         If wsWrk.Cells(j, i).Value <> wsWrk.Cells(j + 1, i).Value Then
                             wsWrk.Cells(j + 2, i).Value = wsWrk.Cells(j, i).Value
-                            wsWrk.Cells(j, i).Font.Color = rgbSnow          ' 文字色：スノー    #fafaff#
-                            wsWrk.Cells(j, i).Interior.Color = rgbDarkRed   ' 背景色：濃い赤    #00008b#
+                            wsWrk.Cells(j, i).Font.Color = rgbTeal            ' 文字色：青緑      #808000#
+                            wsWrk.Cells(j, i).Interior.Color = rgbLightCoral  ' 背景色：薄いさんご #8080f0#
                             wsWrk.Cells(j + 1, i).Font.Color = rgbSnow        ' 文字色：スノー    #fafaff#
                             wsWrk.Cells(j + 1, i).Interior.Color = rgbDarkRed ' 背景色：濃い赤    #00008b#
                             wsWrk.Cells(j + 2, i).Font.Color = rgbSnow        ' 文字色：スノー    #fafaff#
@@ -144,6 +146,7 @@ Public Sub m3_変更レコード処理_R(ByVal dummy As Variant)
         wsWrk.Cells(j + 1, CHECKED_X) = "before"
         newYmax = newYmax + 1
         wsWrk.Rows(j + 2).Copy Destination:=wsNew.Rows(newYmax)
+        wsNew.Cells(newYmax, newXmax) = wsWrk.Cells(j + 1, wrkXmax)
 
 '        wsWrk.Range(Cells(j + 2, 1), Cells(j + 2, wrkXmax)).Font.Color = rgbSnow             ' 文字色：スノー    #fafaff#
 '        wsWrk.Range(Cells(j + 2, 1), Cells(j + 2, wrkXmax)).Interior.Color = rgbDodgerBlue   ' 背景色：ドジャーブルー    #ff901e#
@@ -160,6 +163,10 @@ Public Sub m3_変更レコード処理_R(ByVal dummy As Variant)
                 End
         End Select
         
+' If newYmax = 884 Then
+' Stop
+' End If
+'
         If sw_change Then
             wsNew.Cells(newYmax, CHECKED_X) = "Modify"
             Cnt.mod = Cnt.mod + 1
@@ -206,6 +213,10 @@ Private Sub modifyItem_R(ByVal p_j As Long _
 
 '                        Else
 '                            wsWrk.Cells(j, CHECKED_X).Value = "same"
+'If p_j = 7 Then
+'Stop
+'End If
+'
 
 ' 変更項目数をカウント
     sameCnt = 0
@@ -221,10 +232,12 @@ Private Sub modifyItem_R(ByVal p_j As Long _
             For xx = p_from To p_to
                 If wsWrk.Cells(p_j, x).Value = wsWrk.Cells(p_j + 2, xx).Value Then
 '                    wsWrk.Cells(p_j, x).Value = ""                         ' 同じ値が既にあるので、変更項目は、消去
+                    wsWrk.Cells(p_j, x).Font.Strikethrough = True           ' 取り消し線を付ける
+                    wsWrk.Cells(p_j, x).Font.Bold = True                    ' 太字に設定
                     wsWrk.Cells(p_j, x).Font.Color = rgbNavy                ' 文字色：ネイビー  #800000#
                     wsWrk.Cells(p_j, x).Interior.Color = rgbSnow            ' 背景色：スノー    #fafaff#
-                    wsWrk.Cells(p_j + 1, x).Font.Color = rgbNavy              ' 文字色：ネイビー  #800000#
-                    wsWrk.Cells(p_j + 1, x).Interior.Color = rgbSnow          ' 背景色：スノー    #fafaff#
+                    wsWrk.Cells(p_j + 1, xx).Font.Color = rgbNavy              ' 文字色：ネイビー  #800000#
+                    wsWrk.Cells(p_j + 1, xx).Interior.Color = rgbSnow          ' 背景色：スノー    #fafaff#
                     sameCnt = sameCnt - 1
                     Exit For
                 End If
@@ -235,22 +248,24 @@ Private Sub modifyItem_R(ByVal p_j As Long _
 ' 違う内容のものを空いてるセルにコピー
     If sameCnt <> 0 Then
         For x = p_from To p_to
-            If wsWrk.Cells(p_j, x).Value <> "" Then
-                For xx = p_from To p_to
-                    If wsWrk.Cells(p_j + 2, xx).Value = "" Then
-                        wsWrk.Cells(p_j + 2, xx).Value = wsWrk.Cells(p_j, x).Value
-'                        wsWrk.Cells(p_j, x).Value = ""                 ' 更新できたので、消去
-                        wsWrk.Cells(p_j, x).Font.Color = rgbSnow          ' 文字色：スノー    #fafaff#
-                        wsWrk.Cells(p_j, x).Interior.Color = rgbDarkRed   ' 背景色：濃い赤    #00008b#
-                        wsWrk.Cells(p_j + 1, xx).Font.Color = rgbSnow        ' 文字色：スノー    #fafaff#
-                        wsWrk.Cells(p_j + 1, xx).Interior.Color = rgbDarkRed ' 背景色：濃い赤    #00008b#
-                        wsWrk.Cells(p_j + 2, xx).Font.Color = rgbSnow        ' 文字色：スノー    #fafaff#
-                        wsWrk.Cells(p_j + 2, xx).Interior.Color = rgbDarkRed ' 背景色：濃い赤    #00008b#
-                        p_modifySw = True
-                        sameCnt = sameCnt - 1
-                        Exit For
-                    End If
-                Next xx
+            If wsWrk.Cells(p_j, x).Font.Strikethrough = False Then  ' 取り消し線の項目は、既に　登録済み
+                If wsWrk.Cells(p_j, x).Value <> "" Then
+                    For xx = p_from To p_to
+                        If wsWrk.Cells(p_j + 2, xx).Value = "" Then
+                            wsWrk.Cells(p_j + 2, xx).Value = wsWrk.Cells(p_j, x).Value
+    '                        wsWrk.Cells(p_j, x).Value = ""                 ' 更新できたので、消去
+                            wsWrk.Cells(p_j, x).Font.Color = rgbSnow          ' 文字色：スノー    #fafaff#
+                            wsWrk.Cells(p_j, x).Interior.Color = rgbDarkRed   ' 背景色：濃い赤    #00008b#
+                            wsWrk.Cells(p_j + 1, xx).Font.Color = rgbSnow        ' 文字色：スノー    #fafaff#
+                            wsWrk.Cells(p_j + 1, xx).Interior.Color = rgbDarkRed ' 背景色：濃い赤    #00008b#
+                            wsWrk.Cells(p_j + 2, xx).Font.Color = rgbSnow        ' 文字色：スノー    #fafaff#
+                            wsWrk.Cells(p_j + 2, xx).Interior.Color = rgbDarkRed ' 背景色：濃い赤    #00008b#
+                            p_modifySw = True
+                            sameCnt = sameCnt - 1
+                            Exit For
+                        End If
+                    Next xx
+                End If
             End If
         Next x
     End If
