@@ -107,11 +107,8 @@ Public Sub m1_初期化処理_R(ByVal dummy As Variant)
 '
 ' ---Procedure Division ----------------+-----------------------------------------
 '
-' 1.1 前処理（共通）
-            
-    OpeningMsg = "「新住所録原簿の更新処理」プログラムを開始します。"
-    StatusBarMsg = OpeningMsg
-    Call 前処理_R("")
+    IsMsgbox ("[Step1 新住所録の更新処理] を開始します。")
+
 
 ' 1.2 初期設定処理
     
@@ -257,11 +254,11 @@ Public Sub m1_初期化処理_R(ByVal dummy As Variant)
     Cnt.arv = arvCnt    ' ②archive
     Cnt.trn = trnCnt    ' ③変更住所録
     Cnt.wrk = wrkCnt    ' work
-    Cnt.new1 = 0        ' newの原簿レコード
-    Cnt.new2 = 0        ' newのarchivesレコード
-    Cnt.new3 = 0        ' newの変更住所録で新規レコード
-    Cnt.mod = 0         ' 変更レコード
-    Cnt.add = 0         ' 追加レコード
+'    Cnt.new1 = 0        ' newの原簿レコード
+'    Cnt.new2 = 0        ' newのarchivesレコード
+'    Cnt.new3 = 0        ' newの変更住所録で新規レコード
+'    Cnt.mod = 0         ' 変更レコード
+'    Cnt.add = 0         ' 追加レコード
 End Sub
 
 Private Sub importClear_R(ByVal p_sheetName As String)

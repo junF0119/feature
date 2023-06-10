@@ -4,8 +4,8 @@ Option Explicit
 ' | @function   : 標準的に利用されるモジュールを標準関数として統合
 ' --------------------------------------+-----------------------------------------
 ' | @moduleName : CM00_共通関数"
-' | @Version    : v3.0.3
-' | @update     : 2023/06/06
+' | @Version    : v3.1.0
+' | @update     : 2023/06/11
 ' | @written    : 2023/04/21
 ' | @author     : Jun Fujinawa
 ' | @license    : zStudio
@@ -274,8 +274,8 @@ Sub 前処理_R(ByVal dummy As Variant)
 ' | @function   : ジョブの初期処理（標準版）
 ' --------------------------------------+-----------------------------------------
 ' | @moduleName : proc_H2_前処理
-' | @Version    : v3.2.0
-' | @update     : 2023/05/17
+' | @Version    : v3.3.0
+' | @update     : 2023/06/11
 ' | @written    : 2020/12/29
 ' | @remarks
 ' |     1.プログラムで共通の初期値、環境変数を設定等の事前準備
@@ -291,7 +291,9 @@ Sub 前処理_R(ByVal dummy As Variant)
    
     Call get共通変数_R("")
     
-    IsMsgbox (OpeningMsg)
+    If OpeningMsg <> "" Then
+        IsMsgbox (OpeningMsg)
+    End If
     
     Call putStatusBar(StatusBarMsg)
     
@@ -649,8 +651,8 @@ Public Function IsMsgbox(p_helloMsg) As Boolean
 ' | @function   : メッセージ表示の応答により対応付き　msgbox （標準版）
 ' --------------------------------------+-----------------------------------------
 ' | @moduleName : util09_IsMsgbox
-' | @Version    : v2.0.0
-' | @update     : 2020/12/25
+' | @Version    : v2.1.0
+' | @update     : 2023/06/11
 ' | @written    : 2020/04/06
 ' | @remarks
 ' |             IsMsgbox("メッセージ")
@@ -694,10 +696,10 @@ Public Function IsMsgbox(p_helloMsg) As Boolean
             IsMsgbox = False
             End
         Else
+            Call putStatusBar(StatusBarMsg)
             IsMsgbox = True
         End If
-
-    
+        
 End Function
 
 Public Sub IsMsgPush(ByVal Msg As String)
