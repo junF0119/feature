@@ -77,7 +77,7 @@ Public Sub m9_終了処理_R(ByVal dummy As Variant)
                 & "| (内訳)②archive" & Chr(9) & "＝ " & Cnt.new2 & Chr(13) _
                 & "| (内訳)③新規" & Chr(9) & "＝ " & Cnt.new3 & Chr(13) _
                 & "|変更レコード" & Chr(9) & "＝ " & Cnt.mod & Chr(13) _
-                & "|追加レコード" & Chr(9) & "＝ " & Cnt.add & Chr(13)
+                & "|追加レコード" & Chr(9) & "＝ " & Cnt.Add & Chr(13)
                 
                 
     Call 後処理_R(CloseingMsg & Chr(13) & "プログラムは正常終了しました。")

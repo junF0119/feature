@@ -272,7 +272,7 @@ Function Trim()
 End Function
 
 
-Function MacID()
+Function MacLblID()
 End Function
 
 

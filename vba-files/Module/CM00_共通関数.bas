@@ -12,7 +12,7 @@ Option Explicit
 ' | @remarks
 ' |
 ' | @Program naming rule
-' |  ProgramID: xx.99.99-xxxxxxxxx-vx.y.z-yyyymmdd.suffix   x.y.zßversion number
+' |  ProgramLblID: xx.99.99-xxxxxxxxx-vx.y.z-yyyymmdd.suffix   x.y.zßversion number
 ' |              |--xx(SystemSymbl)
 ' |              |----99(Subsystem#)
 ' |              |------.(priodßseparator)
@@ -167,7 +167,7 @@ Option Explicit
 '   ¦public•Ï”(“–ŠYƒvƒƒWƒFƒNƒg“à‚Ìƒ‚ƒWƒ…[ƒ‹ŠÔ‚Å‹¤—L)‚ÍAÅ‰‚ÉŒÄ‚Î‚ê‚éƒvƒƒVƒWƒƒ[‚É’è‹`
 '
 Public BackupFile                       As String       ' Às‘Oƒtƒ@ƒCƒ‹‚Ì•Û‘¶—pƒtƒHƒ‹ƒ_‚Ìƒtƒ‹ƒpƒX
-Public fullPath                         As String       ' ÀsExcel‚Ìƒtƒ‹ƒpƒX+ƒtƒ@ƒCƒ‹–¼ ß Thisworkbook
+Public FullPath                         As String       ' ÀsExcel‚Ìƒtƒ‹ƒpƒX+ƒtƒ@ƒCƒ‹–¼ ß Thisworkbook
 Public PathName                         As String       ' ÀsExcel‚Ìƒtƒ‹ƒpƒX
 Public FileName                         As String       ' ÀsExcel‚Ìƒtƒ@ƒCƒ‹–¼
 ' ƒfƒBƒŒƒNƒgƒŠ\‘¢‚ÌƒpƒX‚Æ–¼‘O
@@ -182,9 +182,9 @@ Public PrgName                          As String       ' ÀsExcel‚ÌƒvƒƒOƒ‰ƒ€–
 Public Version                          As String       ' vx.x.x
 Public Update                           As String       ' yyyymmdd
 ' ƒvƒƒOƒ‰ƒ€Às‚Ì“úî•ñ
-Public nowY                             As Integer      ' ¡“ú‚Ì”Ni”šj
-Public nowM                             As Integer      ' ¡“ú‚ÌŒi”šj
-Public nowD                             As Integer      ' ¡“ú‚Ì“úi”šj
+Public NowY                             As Integer      ' ¡“ú‚Ì”Ni”šj
+Public NowM                             As Integer      ' ¡“ú‚ÌŒi”šj
+Public NowD                             As Integer      ' ¡“ú‚Ì“úi”šj
 Public TimeStart                        As Variant      ' ƒvƒƒOƒ‰ƒ€ŠJn‚Ì“ú•t‚Æ
 Public TimeStop                         As Variant      ' ƒvƒƒOƒ‰ƒ€I—¹‚Ì“ú•t‚Æ
 Public TimeLap                          As Variant      ' ƒvƒƒOƒ‰ƒ€Às‚ÌŠ—vŠÔ
@@ -236,12 +236,12 @@ Sub get‹¤’Ê•Ï”_R(ByVal dummy As Variant)
     TimeStop = TimeStart
     TimeLap = TimeStop - TimeStart
     nowYMD = Now()               ' ¡“ú‚Ì“ú•t‚©‚ç”NAŒA“úAŒ––“ú‚ğ•ªŠ„
-    nowY = Year(nowYMD)
-    nowM = month(nowYMD)
-    nowD = Day(nowYMD)
+    NowY = Year(nowYMD)
+    NowM = month(nowYMD)
+    NowD = Day(nowYMD)
 
-' ƒtƒ@ƒCƒ‹–¼‘®F .\.\SysID.xx.xx_programName-vX.Y.Z_yyyymmdd.sufix
-    fullPath = ActiveWorkbook.Path & "\" & ActiveWorkbook.Name
+' ƒtƒ@ƒCƒ‹–¼‘®FLblIDey\SysID.xx.xx_programName-vX.Y.Z_yyyymmdd.sufix
+    FullPath = ActiveWorkbook.Path & "\" & ActiveWorkbook.Name
     PathName = ActiveWorkbook.Path
     FileName = ActiveWorkbook.Name
     temp = Split(PathName, "\")
@@ -373,9 +373,9 @@ Public Sub •W€ƒ‚ƒWƒ…[ƒ‹ˆêŠ‡Export()
    
    
     Dim nowYMD                          As Date
-    Dim nowY                            As Integer
-    Dim nowM                            As Integer
-    Dim nowD                            As Integer
+    Dim NowY                            As Integer
+    Dim NowM                            As Integer
+    Dim NowD                            As Integer
 '                                       +
     Dim module                          As VBComponent      '// ƒ‚ƒWƒ…[ƒ‹
     Dim moduleList                      As VBComponents     '// VBAƒvƒƒWƒFƒNƒg‚Ì‘Sƒ‚ƒWƒ…[ƒ‹
@@ -385,7 +385,7 @@ Public Sub •W€ƒ‚ƒWƒ…[ƒ‹ˆêŠ‡Export()
     Dim TargetBook                      As Object           '// ˆ—‘ÎÛƒuƒbƒNƒIƒuƒWƒFƒNƒg
     Dim saveDir                         As String           '// VBA‚Ì•Û‘¶ƒtƒHƒ‹ƒ_
 
-    Dim fullPath                        As String
+    Dim FullPath                        As String
     Dim sysSybl                         As String           '// ƒVƒXƒeƒ€ƒVƒ“ƒ{ƒ‹@\!Program(????)
     Dim l, lMax                         As Long
 '
@@ -409,7 +409,7 @@ Public Sub •W€ƒ‚ƒWƒ…[ƒ‹ˆêŠ‡Export()
     prgPathName = myDir
     prgFullPath = myDir & "\" & myBook
     prgFileName = myBook
-' ProgramID: xx99.99-xxxxxxxxx-vx.y.z-yyyymmdd.suffix   x.y.zßversion number ‚ğ•ªŠ„
+' ProgramLblID: xx99.99-xxxxxxxxx-vx.y.z-yyyymmdd.suffix   x.y.zßversion number ‚ğ•ªŠ„
 '             |--xx(SystemSymbl)
 '             |----99(Subsystem#)
 '             |------.(priodßseparator)
@@ -450,11 +450,11 @@ Public Sub •W€ƒ‚ƒWƒ…[ƒ‹ˆêŠ‡Export()
 
     nowYMD = Now()               ' ¡“ú‚Ì“ú•t‚©‚ç”NAŒA“úAŒ––“ú‚ğ•ªŠ„
 
-    nowY = Year(nowYMD)
-    nowM = month(nowYMD)
-    nowD = Day(nowYMD)
+    NowY = Year(nowYMD)
+    NowM = month(nowYMD)
+    NowD = Day(nowYMD)
    
-'   Call R_DocInfoGet           ' ƒtƒ@ƒCƒ‹‚ÌƒpƒXî•ñiDocInfo)‚©‚çProgramID“™‚ğ“¾‚é
+'   Call R_DocInfoGet           ' ƒtƒ@ƒCƒ‹‚ÌƒpƒXî•ñiDocLblIDblKeyProgramID“™‚ğ“¾‚é
 
    '// ƒuƒbƒN‚ªŠJ‚©‚ê‚Ä‚¢‚È‚¢ê‡‚ÍŒÂl—pƒ}ƒNƒƒuƒbƒNipersonal.xlsbj‚ğ‘ÎÛ‚Æ‚·‚é
     If (Workbooks.Count = 1) Then
@@ -536,7 +536,7 @@ Private Sub R_DocInfoGet()
    prgPathName = myDir
    prgFullPath = myDir & "\" & myBook
    prgFileName = myBook
-' ProgramID: xx99.99-xxxxxxxxx-vx.y.z-yyyymmdd.suffix   x.y.zßversion number ‚ğ•ªŠ„
+' ProgramLblID: xx99.99-xxxxxxxxx-vx.y.z-yyyymmdd.suffix   x.y.zßversion number ‚ğ•ªŠ„
 '             |--xx(SystemSymbl)
 '             |----99(Subsystem#)
 '             |------.(priodßseparator)
@@ -577,9 +577,9 @@ Private Sub R_DocInfoGet()
 
    nowYMD = Now()               ' ¡“ú‚Ì“ú•t‚©‚ç”NAŒA“úAŒ––“ú‚ğ•ªŠ„
 
-   nowY = Year(nowYMD)
-   nowM = month(nowYMD)
-   nowD = Day(nowYMD)
+   NowY = Year(nowYMD)
+   NowM = month(nowYMD)
+   NowD = Day(nowYMD)
 
 End Sub
 
@@ -800,7 +800,7 @@ Public Function selectFile(ByVal P_title As String)
     Dim openFolder                      As String
 
     Dim z, zMin, zMax                   As Long
-    Dim fullPath                        As String
+    Dim FullPath                        As String
     Dim folderName                      As String
     Dim delimiterChar                   As String
 '
@@ -823,17 +823,17 @@ Public Function selectFile(ByVal P_title As String)
         delimiterChar = ""
         For z = zMin To zMax
             If tbl(z) <> "" Then
-                If fullPath <> "" Then  ' ƒpƒX‚Ìæ“ª‚ÍAƒhƒ‰ƒCƒu•¶š‚È‚Ì‚ÅA‹æØ‚è•¶š‚Í‚Â‚¯‚È‚¢
+                If FullPath <> "" Then  ' ƒpƒX‚Ìæ“ª‚ÍAƒhƒ‰ƒCƒu•¶š‚È‚Ì‚ÅA‹æØ‚è•¶š‚Í‚Â‚¯‚È‚¢
                     delimiterChar = "\"
                 End If
-                fullPath = fullPath + delimiterChar + tbl(z)
+                FullPath = FullPath + delimiterChar + tbl(z)
             End If
         Next z
         
         folderName = tbl(zMax)
     
 ' ¬Œ÷
-    getFolderPath_F = Array(fullPath, folderName)
+    getFolderPath_F = Array(FullPath, folderName)
 
 End Function
 
@@ -853,7 +853,7 @@ Public Function selectFolder(ByVal P_title As String) As Variant
     Dim openFolder                      As String
 
     Dim z, zMin, zMax                   As Long
-    Dim fullPath                        As String
+    Dim FullPath                        As String
     Dim folderName                      As String
     Dim delimiterChar                   As String
 '
@@ -875,17 +875,17 @@ Public Function selectFolder(ByVal P_title As String) As Variant
         delimiterChar = ""
         For z = zMin To zMax
             If tbl(z) <> "" Then
-                If fullPath <> "" Then  ' ƒpƒX‚Ìæ“ª‚ÍAƒhƒ‰ƒCƒu•¶š‚È‚Ì‚ÅA‹æØ‚è•¶š‚Í‚Â‚¯‚È‚¢
+                If FullPath <> "" Then  ' ƒpƒX‚Ìæ“ª‚ÍAƒhƒ‰ƒCƒu•¶š‚È‚Ì‚ÅA‹æØ‚è•¶š‚Í‚Â‚¯‚È‚¢
                     delimiterChar = "\"
                 End If
-                fullPath = fullPath + delimiterChar + tbl(z)
+                FullPath = FullPath + delimiterChar + tbl(z)
             End If
         Next z
         
         folderName = tbl(zMax)
     
 ' ¬Œ÷
-    selectFolder = Array(fullPath, folderName)
+    selectFolder = Array(FullPath, folderName)
 
 End Function
 
@@ -947,7 +947,7 @@ Public Function getFolderPath_F(ByVal P_title As String)
     Dim openFolder                      As String
 
     Dim z, zMin, zMax                   As Long
-    Dim fullPath                        As String
+    Dim FullPath                        As String
     Dim folderName                      As String
     Dim delimiterChar                   As String
 '
@@ -970,17 +970,17 @@ Public Function getFolderPath_F(ByVal P_title As String)
         delimiterChar = ""
         For z = zMin To zMax
             If tbl(z) <> "" Then
-                If fullPath <> "" Then  ' ƒpƒX‚Ìæ“ª‚ÍAƒhƒ‰ƒCƒu•¶š‚È‚Ì‚ÅA‹æØ‚è•¶š‚Í‚Â‚¯‚È‚¢
+                If FullPath <> "" Then  ' ƒpƒX‚Ìæ“ª‚ÍAƒhƒ‰ƒCƒu•¶š‚È‚Ì‚ÅA‹æØ‚è•¶š‚Í‚Â‚¯‚È‚¢
                     delimiterChar = "\"
                 End If
-                fullPath = fullPath + delimiterChar + tbl(z)
+                FullPath = FullPath + delimiterChar + tbl(z)
             End If
         Next z
         
         folderName = tbl(zMax)
     
 ' ¬Œ÷
-    getFolderPath_F = Array(fullPath, folderName)
+    getFolderPath_F = Array(FullPath, folderName)
 
 End Function
 

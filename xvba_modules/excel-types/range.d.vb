@@ -482,7 +482,7 @@ Public Property HorizontalAlignment As Variant
 
 Public Property Hyperlinks As Object
 
-Public Property ID As String
+Public Property LblID As String
 
 Public Property IndentLevel As Variant
 

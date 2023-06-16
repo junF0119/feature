@@ -124,12 +124,12 @@ Public Event AfterCalculate()
 '
 'Example:
 '
-'Private Sub App_NewWorkbook(ByVal Wb As Workbook) 
+'Private Sub App_NewWorkbook(ByVal wb As Workbook) 
 'Application.Windows.Arrange xlArrangeStyleTiled End Sub
 '   
-'@param {Workbook} Wb
+'@param {Workbook} wb
 '*/
-Public Event NewWorkbook(ByVal Wb As Workbook) 
+Public Event NewWorkbook(ByVal wb As Workbook) 
 
 '/*
 'Returns a Sheets collection that represents all the sheets in the specified workbook. Read-only Sheets object.

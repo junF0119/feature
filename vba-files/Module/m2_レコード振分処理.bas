@@ -138,13 +138,13 @@ Public Sub m2_レコード振分処理_R(ByVal dummy As Variant)
         .Sort.SortFields.Clear      '並び替え条件をクリア
         '項目1
         .Sort.SortFields.Add2 _
-             Key:=.Range(PKEY_RNG) _
+             key:=.Range(PKEY_RNG) _
             , SortOn:=xlSortOnValues _
             , Order:=xlAscending _
             , DataOption:=xlSortNormal
         '項目2
         .Sort.SortFields.Add2 _
-             Key:=.Range(MASTER_RNG) _
+             key:=.Range(MASTER_RNG) _
             , SortOn:=xlSortOnValues _
             , Order:=xlDescending _
             , DataOption:=xlSortNormal
@@ -189,13 +189,13 @@ Public Sub m2_レコード振分処理_R(ByVal dummy As Variant)
         .Sort.SortFields.Clear      '並び替え条件をクリア
         '項目1
         .Sort.SortFields.Add2 _
-             Key:=.Range(PKEY_RNG) _
+             key:=.Range(PKEY_RNG) _
             , SortOn:=xlSortOnValues _
             , Order:=xlAscending _
             , DataOption:=xlSortNormal
         '項目2
         .Sort.SortFields.Add2 _
-             Key:=.Range(MASTER_RNG) _
+             key:=.Range(MASTER_RNG) _
             , SortOn:=xlSortOnValues _
             , Order:=xlDescending _
             , DataOption:=xlSortNormal

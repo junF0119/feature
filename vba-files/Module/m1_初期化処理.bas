@@ -229,13 +229,13 @@ Public Sub m1_初期化処理_R(ByVal dummy As Variant)
         .Sort.SortFields.Clear      '並び替え条件をクリア
         '項目1
         .Sort.SortFields.Add2 _
-             Key:=.Range(PKEY_RNG) _
+             key:=.Range(PKEY_RNG) _
             , SortOn:=xlSortOnValues _
             , Order:=xlAscending _
             , DataOption:=xlSortNormal
         '項目2
         .Sort.SortFields.Add2 _
-             Key:=.Range(MASTER_RNG) _
+             key:=.Range(MASTER_RNG) _
             , SortOn:=xlSortOnValues _
             , Order:=xlDescending _
             , DataOption:=xlSortNormal
@@ -357,7 +357,11 @@ Private Sub importSheet_R(ByVal p_excelFile As String, ByVal p_objSheet As Strin
 ' 外部Excelファイルを開き、importシートを作業シート work へコピー
     Workbooks.Open srcFile
     Set wbTmp = ActiveWorkbook
-'    ActiveSheet.ShowAllData         ' フィルタ解除
+' フィルタ解除
+    If ActiveSheet.AutoFilterMode = True Then
+        Rows(YMIN - 1 & ":" & YMIN).AutoFilter
+    End If
+    
     wbTmp.Sheets(p_objSheet).Range(Cells(YMIN, XMIN).Address, Cells(yMax, XMAX).Address).Copy
     Wb.Sheets(p_objSheet).Range(Cells(YMIN, XMIN).Address).PasteSpecial _
                                                            Paste:=xlPasteValues _

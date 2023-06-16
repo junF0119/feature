@@ -1,12 +1,12 @@
-Attribute VB_Name = "m3_変更レコード処理"
+Attribute VB_Name = "m4_更新済住所録Export"
 Option Explicit
 ' --------------------------------------+-----------------------------------------
-' | @function   : 変更レコードで①原簿または②archivesレコードを更新する
+' | @function   : ①原簿と②archivesレコードが混在した新住所録シートからそれぞれのExcelブックを出力
 ' --------------------------------------+-----------------------------------------
-' | @moduleName : m3_変更レコード処理
+' | @moduleName : m4_住所録Export
 ' | @Version    : v1.0.0
-' | @update     : 2023/06/06
-' | @written    : 2023/06/06
+' | @update     : 2023/06/11
+' | @written    : 2023/06/11
 ' | @author     : Jun Fujinawa
 ' | @license    : zStudio
 ' | @remarks
@@ -30,11 +30,6 @@ Option Explicit
 ' 共通有効シートサイズ（データ部のみの領域）
 '
 Private Wb                              As Workbook         ' このブック
-' 作業シート work の定義
-Private wsWrk                           As Worksheet
-Private wrkX, wrkXmin, wrkXmax          As Long             ' i≡x 列　column
-Private wrkY, wrkYmin, wrkYmax          As Long             ' j≡y 行　row
-
 ' ③new シートの定義
 Private wsNew                           As Worksheet
 Private newX, newXmin, newXmax          As Long             ' i≡x 列　column
@@ -53,39 +48,125 @@ Private newY, newYmin, newYmax          As Long             ' j≡y 行　row
 'End Type
 'Public Cnt                              As cntTbl
 
-Public Sub m3_変更レコード処理_R(ByVal dummy As Variant)
+Public Sub m4_更新済住所録Export_R(ByVal dummy As Variant)
 ' --------------------------------------+-----------------------------------------
-' |     workシートに残ったレコードを更新
+' |     新住所録シートから①住所録原簿と②ArchiveのExcelを出力
 ' --------------------------------------+-----------------------------------------
-'    Dim Cnt                             As cntTbl
-    Dim x, y, z                         As Long
-    Dim CloseingMsg                     As String
-    Dim w_rate, w_mod                   As Integer      ' 進捗率 / 表示間隔
-    Dim i, iMin, iMax                   As Long         ' 同一レコードの範囲(列 col x)
-    Dim j, jMin, jMax                   As Long         ' 同一レコードの範囲(行 row y)
-    Dim r                               As Long         ' 変更項目の列番号
-
-    Dim sw_change                       As Boolean      ' true ≡ 変更箇所有り　/　False ≡ 〃　無し
+'
+    Dim newCnt                          As Long: newCnt = 0
+    Dim arvCnt                          As Long: arvCnt = 0
+    Dim saveDir                         As String
 
 '
 ' ---Procedure Division ----------------+-----------------------------------------
 '
 ' オブジェクト変数の定義（共通）
     Set Wb = ThisWorkbook
-    ' 表の大きさを得る
-    ' 作業シート（このシート）の初期値
-    Set wsWrk = Wb.Worksheets("work")                                       ' 作業用シートのため固定
-    wrkYmin = YMIN
-    wrkXmin = XMIN
-    wrkYmax = wsWrk.Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row              ' 最終行（縦方向）3列目（"C")名前列で計測
-    wrkXmax = wsWrk.Cells(YMIN - 1, Columns.Count).End(xlToLeft).Column     ' 最終列（横方向）ヘッダー行 3行目で計測
-    
-' ③new シートの初期値
+
+' ③new シートの初期値 & 表の大きさを得る
     Set wsNew = Wb.Worksheets(Range("C_newSheet").Value)                    ' 新住所録シート
     newYmin = YMIN
     newXmin = XMIN
     newYmax = wsNew.Cells(Rows.Count, PSEIMEI_X).End(xlUp).Row              ' 最終行（縦方向）
     newXmax = wsNew.Cells(YMIN - 1, Columns.Count).End(xlToLeft).Column     ' 最終列（横方向）
+'
+'    Set fso = CreateObject("Scripting.FileSystemObject")
+'    Set fso = New FileSystemObject          ' インスタンス化
+
+    saveDir = PathName & "\" & SysSymbol & "-backup"
+
+    If Dir(saveDir, vbDirectory) = "" Then  ' フォルダがないときは、作成する
+        MkDir saveDir
+    End If
+
+    BackupFile = "backup-" & Format(Now(), "yyyy-mm-dd_hhmmss") & "_" & FileName
+'バックアップ後も同じファイルを使うためには、SaveCopyAs を使う
+    ActiveWorkbook.SaveCopyAs saveDir & "\" & BackupFile            ' バックアップ後も同じファイルを使うためには、　SaveCopyAs を使う
+
+    Sheets("新住所録").Select
+    Sheets("新住所録").Copy Before:=Sheets(1)
+    Rows("3:3").Select
+    Selection.AutoFilter
+    Rows("3:3").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    ActiveWorkbook.Worksheets("新住所録 (2)").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("新住所録 (2)").Sort.SortFields.Add2 key:=Range( _
+        "BB4:BB801"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+        xlSortNormal
+    With ActiveWorkbook.Worksheets("新住所録 (2)").Sort
+        .SetRange Range("A3:WWN801")
+        .Header = xlYes
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+    ActiveWindow.SmallScroll ToRight:=34
+    ActiveWindow.SmallScroll Down:=138
+    Range("BB152:BB546").Select
+    Selection.EntireRow.Delete
+    Sheets("新住所録 (2)").Select
+    Sheets("新住所録 (2)").Copy
+    Application.Left = -1174.25
+    Application.Top = 272.5
+    Windows("zz2.1.1-新住所録更新-v1.3.0.take1-20230611.xlsm").Activate
+    Sheets("⑨label").Select
+    Sheets("⑨label").Copy Before:=Workbooks("Book1").Sheets(1)
+    Application.Left = 163
+    Application.Top = 97
+    ActiveWorkbook.Names("C_ラベル一覧").Delete
+    ActiveWorkbook.Names("pathName").Delete
+    ActiveWorkbook.Names("pathName").Delete
+    ActiveWorkbook.Names("update").Delete
+    ActiveWorkbook.Names("update").Delete
+    ActiveWorkbook.Names("updateTxt").Delete
+    ActiveWorkbook.Names("updateTxt").Delete
+    ActiveWorkbook.Names("updateTxt2").Delete
+    ActiveWorkbook.Names("verShort").Delete
+    ActiveWorkbook.Names("verShort").Delete
+    ActiveWorkbook.Names("version").Delete
+    ActiveWorkbook.Names("version").Delete
+    ActiveWorkbook.Names("verUpdateTxt2").Delete
+    ActiveWorkbook.Names("verUpdateTxt2").Delete
+    Sheets("新住所録 (2)").Select
+    Sheets("新住所録 (2)").Move Before:=Sheets(1)
+    Sheets("新住所録 (2)").Select
+    Sheets("新住所録 (2)").Name = "①原簿"
+    ChDir "D:\Desktop\2.Job1-新住所録更新(zz2.1)-v1.3\1.1.inputData"
+    ActiveWorkbook.SaveAs FileName:= _
+        "D:\Desktop\2.Job1-新住所録更新(zz2.1)-v1.3\1.1.inputData\M-①新住所録原簿-v1.1.0-20230611.xlsx" _
+        , FileFormat:=xlOpenXMLWorkbook, CreateBackup:=False
+    ActiveWindow.Close
+End Sub
+
+
+
+Sub Sample6()
+    Dim i As Long, Target As String
+    For i = 2 To Cells(Rows.Count, 1).End(xlUp).Row
+        Target = Cells(i, 1)
+        Sheets(2).Name = Target & "_予算"
+        Sheets(3).Name = Target & "_実績"
+        Sheets(Array(Target & "_予算", Target & "_実績")).Copy
+        ActiveWorkbook.SaveAs "D:\Work\" & Target & ".xlsx"
+        ActiveWorkbook.Close
+    Next i
+End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ' --------------------------------------+-----------------------------------------
 ' 同一キーの(42)key姓名が、3→1or2→0　の順に並ぶので、変更項目で 0 レコードを更新し、新住所録シートへコピーする
@@ -178,6 +259,7 @@ Public Sub m3_変更レコード処理_R(ByVal dummy As Variant)
     Next j
 
 End Sub
+
 
 Private Sub modifyItem_R(ByVal p_j As Long _
                        , ByVal p_i As Long _
@@ -276,3 +358,5 @@ Private Sub modifyItem_R(ByVal p_j As Long _
 
 End Sub
         
+
+
