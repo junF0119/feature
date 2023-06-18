@@ -52,13 +52,15 @@ End Sub
 Public Sub ApplyToSheet()
 
     With obj_Lbl
-        .Cells.Clear
-        .Range(.Cells(1, 1), .Cells(1, 4)) = Array("ラベルID", "ラベル名", "接頭語", "結合子")
+'        .Cells.ClearContents    ' 数式と値のみ消去
+'        .Range(.Cells(1, 1), .Cells(1, 4)) = Array("ラベルID", "ラベル名", "接頭語", "結合子")
+'
+        .Range(.Cells(3, 1), .Cells(100, 6)).ClearContents  ' 数式と値のみ消去
         
         Dim i As Long: i = 3
         Dim p As Lbl: Set p = New Lbl
         For Each p In items_
-            .Range(.Cells(i, 1), .Cells(i, 4)) = Array(p.LblID, p.ラベル名, p.接頭語, p.結合子)
+            .Range(.Cells(i, 1), .Cells(i, 4)) = Array(p.LblID, p.ラベル名, p.接頭語, p.結合子) ' 値のみコピー
             i = i + 1
         Next p
     End With

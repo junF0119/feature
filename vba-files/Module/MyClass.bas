@@ -181,27 +181,37 @@ Sub MyClass()
 '    End With
 '    Stop
 
-'§19
-    Dim myLbls As Lbls: Set myLbls = New Lbls
-    
-    With myLbls
-        .Add (Array("100", "abc", "XYZ", "-"))
-        .Remove 5
-        With .Item("10")
-            .ラベル名 = "10.桜美林中"
-            .接頭語 = "中"
-            .結合子 = "-"
-        End With
-        
-        .ApplyToSheet
-        
-    End With
-    
-    Stop
+''§19
+'    Dim myLbls As Lbls: Set myLbls = New Lbls
+'
+'    With myLbls
+''        .Add (Array("100", "abc", "XYZ", "-"))
+'        .Remove 5
+'        With .Item("10")
+'            .ラベル名 = "10.桜美林中"
+'            .接頭語 = "中"
+'            .結合子 = "-"
+'        End With
+'
+'        .ApplyToSheet
+'
+'    End With
+'
+'    Stop
 
 
+' 進捗表示
+    Dim stBar As New zStatusBar
+    stBar.TotCnt = 1000
 
+    Dim i As Long
+    For i = 1 To stBar.TotCnt
 
+        Call stBar.UpProgress(1)
+        If stBar.Isキリ番(Int(stBar.TotCnt / 10)) Then
+            Call stBar.ViewProgress
+        End If
+    Next
 
 
 Stop
